@@ -38,6 +38,9 @@ final class GameViewModel {
     /// Persists until nextRound() is called.
     var currentRoundSelections: [UUID: RoundSelection] = [:]
 
+    /// Completed round selections, indexed by round (index 0 = round 1).
+    var roundHistory: [[UUID: RoundSelection]] = []
+
     /// Score events for the current active game (activity feed).
     var scoreEvents: [ScoreEvent] = []
 
@@ -87,6 +90,7 @@ final class GameViewModel {
         showConfetti = false
         confirmedWinner = nil
         currentRoundSelections = [:]
+        roundHistory = []
         scoreEvents = []
     }
 
@@ -125,6 +129,7 @@ final class GameViewModel {
         gamePlayers = []
         roundNum = 1
         currentRoundSelections = [:]
+        roundHistory = []
         scoreEvents = []
     }
 
@@ -133,8 +138,18 @@ final class GameViewModel {
             confirmedWinner = winner
             triggerConfetti()
         }
+        roundHistory.append(currentRoundSelections)
         roundNum += 1
         currentRoundSelections = [:]
+    }
+
+    /// Returns the first game player who has not yet had their score confirmed this round.
+    func nextUnscoredPlayer() -> GamePlayer? {
+        gamePlayers.first { currentRoundSelections[$0.id]?.isConfirmed != true }
+    }
+
+    var allPlayersScored: Bool {
+        gamePlayers.allSatisfy { currentRoundSelections[$0.id]?.isConfirmed == true }
     }
 
     /// Save card picks without applying a score (sheet dismissed without confirming).

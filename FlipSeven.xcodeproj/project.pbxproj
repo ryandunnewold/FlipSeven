@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -31,6 +31,7 @@
 		ADEA83A65CE3A4B7D1717A70 /* FlipAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16497F4AB51A91119991AA06 /* FlipAnimations.swift */; };
 		BB6AC84B1401CE49832F235A /* PlayerAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */; };
 		BD9665F1B1E9739E23CE9FA4 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */; };
+		C1A84125995A07F07E84719A /* PastRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD2F7F9AE12BBCD263296F /* PastRoundView.swift */; };
 		C5A1F27AB9EE8EE56B641030 /* TabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35990E576030A295B7EEFF8B /* TabPicker.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,9 +52,10 @@
 		5BE4F8D014E498DE407FCC1A /* ActivityFeedTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFeedTab.swift; sourceTree = "<group>"; };
 		737B8108072A5FDA67C63383 /* PlayersTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersTab.swift; sourceTree = "<group>"; };
 		791EBBED6C5630DAE3C3C027 /* GameRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
+		8CBD2F7F9AE12BBCD263296F /* PastRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastRoundView.swift; sourceTree = "<group>"; };
 		8DFA926E18D2229A599BC15F /* RulesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesTab.swift; sourceTree = "<group>"; };
 		B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
-		D411E164DEB651CC1C4479EF /* FlipSeven.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlipSeven.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D411E164DEB651CC1C4479EF /* FlipSeven.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FlipSeven.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 		D64C3B385AD6650B9BB2451B /* NewGameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameSheet.swift; sourceTree = "<group>"; };
 		E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAvatar.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				EC953C8E3741E5C20E5313B7 /* ConfettiOverlay.swift */,
 				B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */,
 				01DC34DFE7B0ED9E499CC7AD /* GlassCard.swift */,
+				8CBD2F7F9AE12BBCD263296F /* PastRoundView.swift */,
 				E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */,
 				2FB65601FB8F504558A38946 /* PlayerScoreCard.swift */,
 				3889E8F8F7E389BA4A9F7790 /* RoundDotsIndicator.swift */,
@@ -199,6 +202,7 @@
 			);
 			mainGroup = D89DF8974387F4B6CF32A4F6;
 			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -225,6 +229,7 @@
 				1B49543A33F79872BB308666 /* GameViewModel.swift in Sources */,
 				1094F2680A28BDDD765C643C /* GlassCard.swift in Sources */,
 				071B71A68568EF70862751DF /* NewGameSheet.swift in Sources */,
+				C1A84125995A07F07E84719A /* PastRoundView.swift in Sources */,
 				3EFD6AC31A055F4D41377886 /* Player.swift in Sources */,
 				BB6AC84B1401CE49832F235A /* PlayerAvatar.swift in Sources */,
 				278BB0CD69264CEC98CACC8A /* PlayerScoreCard.swift in Sources */,
@@ -316,7 +321,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 5R2UKT4F8J;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -332,7 +336,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 5R2UKT4F8J;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
