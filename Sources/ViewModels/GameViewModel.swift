@@ -1,0 +1,203 @@
+import SwiftUI
+
+@Observable
+@MainActor
+final class GameViewModel {
+    var roster: [Player] = []
+
+    init() {
+        if let data = UserDefaults.standard.data(forKey: "flip7.roster"),
+           let saved = try? JSONDecoder().decode([Player].self, from: data) {
+            roster = saved
+        }
+        if let data = UserDefaults.standard.data(forKey: historyKey),
+           let saved = try? JSONDecoder().decode([GameRecord].self, from: data) {
+            gameHistory = saved
+        }
+    }
+
+    private func saveRoster() {
+        if let data = try? JSONEncoder().encode(roster) {
+            UserDefaults.standard.set(data, forKey: "flip7.roster")
+        }
+    }
+
+    private func saveHistory() {
+        if let data = try? JSONEncoder().encode(gameHistory) {
+            UserDefaults.standard.set(data, forKey: historyKey)
+        }
+    }
+    var gamePlayers: [GamePlayer] = []
+    var roundNum: Int = 1
+    var hasActiveGame: Bool = false
+    var showConfetti: Bool = false
+    var confirmedWinner: GamePlayer? = nil
+    let target: Int = 200
+
+    /// Card picks (and confirmed result) for each player in the current round.
+    /// Persists until nextRound() is called.
+    var currentRoundSelections: [UUID: RoundSelection] = [:]
+
+    /// Score events for the current active game (activity feed).
+    var scoreEvents: [ScoreEvent] = []
+
+    /// All completed games, newest first.
+    var gameHistory: [GameRecord] = []
+
+    private let historyKey = "flip7.gameHistory"
+
+    var sortedGamePlayers: [GamePlayer] {
+        gamePlayers.sorted { $0.score > $1.score }
+    }
+
+    var gameWinner: GamePlayer? {
+        gamePlayers.first { $0.score >= target }
+    }
+
+    // MARK: - Roster
+
+    func addToRoster(name: String, emoji: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        let colorIndex = roster.count % 4
+        roster.append(Player(name: trimmed, emoji: emoji, colorIndex: colorIndex))
+        saveRoster()
+    }
+
+    func removeFromRoster(id: UUID) {
+        roster.removeAll { $0.id == id }
+        saveRoster()
+    }
+
+    func updatePlayerEmoji(id: UUID, emoji: String) {
+        guard let idx = roster.firstIndex(where: { $0.id == id }) else { return }
+        roster[idx].emoji = emoji
+        saveRoster()
+    }
+
+    // MARK: - Game lifecycle
+
+    func startGame(with playerIds: [UUID]) {
+        guard !playerIds.isEmpty else { return }
+        gamePlayers = playerIds.compactMap { id in
+            roster.first { $0.id == id }.map { GamePlayer(player: $0) }
+        }
+        roundNum = 1
+        hasActiveGame = true
+        showConfetti = false
+        confirmedWinner = nil
+        currentRoundSelections = [:]
+        scoreEvents = []
+    }
+
+    func endGame() {
+        let winnerId = gameWinner?.id
+
+        // Save a game record to history
+        let snapshots = gamePlayers.map { gp in
+            GameRecord.PlayerSnapshot(
+                id: gp.id,
+                name: gp.name,
+                emoji: gp.emoji,
+                colorIndex: gp.player.colorIndex,
+                finalScore: gp.score,
+                roundWins: gp.roundWins,
+                busts: gp.busts,
+                isWinner: gp.id == winnerId
+            )
+        }.sorted { $0.finalScore > $1.finalScore }
+
+        let record = GameRecord(roundsPlayed: roundNum, players: snapshots, events: scoreEvents)
+        gameHistory.insert(record, at: 0)
+        saveHistory()
+
+        // Persist each player's game stats into their lifetime record
+        for gp in gamePlayers {
+            guard let idx = roster.firstIndex(where: { $0.id == gp.id }) else { continue }
+            roster[idx].gamesPlayed += 1
+            if gp.id == winnerId { roster[idx].gamesWon += 1 }
+            roster[idx].totalRoundWins += gp.roundWins
+            roster[idx].totalBusts += gp.busts
+        }
+        saveRoster()
+
+        hasActiveGame = false
+        gamePlayers = []
+        roundNum = 1
+        currentRoundSelections = [:]
+        scoreEvents = []
+    }
+
+    func nextRound() {
+        if let winner = gameWinner, confirmedWinner == nil {
+            confirmedWinner = winner
+            triggerConfetti()
+        }
+        roundNum += 1
+        currentRoundSelections = [:]
+    }
+
+    /// Save card picks without applying a score (sheet dismissed without confirming).
+    func saveDraftSelection(id: UUID, selection: RoundSelection) {
+        // Don't overwrite an already-confirmed entry with a draft
+        if let existing = currentRoundSelections[id], existing.isConfirmed { return }
+        currentRoundSelections[id] = selection
+    }
+
+    /// Confirm a player's score for this round. Supports re-confirming (undoes previous
+    /// contribution first so the score stays correct).
+    func scorePlayer(id: UUID, points: Int, isWin: Bool, isBust: Bool, selection: RoundSelection) {
+        guard let idx = gamePlayers.firstIndex(where: { $0.id == id }) else { return }
+
+        // Undo any score already applied this round for this player
+        if let existing = currentRoundSelections[id], existing.isConfirmed {
+            if existing.appliedBust {
+                gamePlayers[idx].busts -= 1
+            } else {
+                gamePlayers[idx].score -= existing.appliedPoints
+                if existing.appliedWin {
+                    gamePlayers[idx].roundWins -= 1
+                }
+            }
+        }
+
+        // Apply the new result
+        if isBust {
+            gamePlayers[idx].busts += 1
+        } else {
+            gamePlayers[idx].score += points
+            if isWin { gamePlayers[idx].roundWins += 1 }
+        }
+
+        // Persist the confirmed selection
+        var confirmed = selection
+        confirmed.isConfirmed = true
+        confirmed.appliedPoints = isBust ? 0 : points
+        confirmed.appliedWin = isWin && !isBust
+        confirmed.appliedBust = isBust
+        currentRoundSelections[id] = confirmed
+
+        // Update the activity feed — remove any previous entry for this player this round
+        // (handles re-confirms), then append the latest result
+        scoreEvents.removeAll { $0.playerId == id && $0.round == roundNum }
+        let gp = gamePlayers[idx]
+        scoreEvents.append(ScoreEvent(
+            round: roundNum,
+            playerId: id,
+            playerName: gp.name,
+            playerEmoji: gp.emoji,
+            playerColorIndex: gp.player.colorIndex,
+            points: isBust ? 0 : points,
+            isRoundWin: isWin && !isBust,
+            isBust: isBust
+        ))
+    }
+
+    private func triggerConfetti() {
+        showConfetti = true
+        Task {
+            try? await Task.sleep(for: .seconds(4))
+            showConfetti = false
+        }
+    }
+}

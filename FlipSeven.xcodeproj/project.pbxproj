@@ -1,0 +1,431 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		071B71A68568EF70862751DF /* NewGameSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D64C3B385AD6650B9BB2451B /* NewGameSheet.swift */; };
+		0EB7CC67664DCCFB345E1410 /* FlipTypography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FA0CB1F051D3B10EBA5F0C /* FlipTypography.swift */; };
+		1094F2680A28BDDD765C643C /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DC34DFE7B0ED9E499CC7AD /* GlassCard.swift */; };
+		1191424411D1ABBC08CB4292 /* RulesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA926E18D2229A599BC15F /* RulesTab.swift */; };
+		12ECBA4ADE1B1366F8AFB327 /* FlipSevenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AC89A4BD83593A5623826E /* FlipSevenApp.swift */; };
+		1B49543A33F79872BB308666 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */; };
+		278BB0CD69264CEC98CACC8A /* PlayerScoreCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB65601FB8F504558A38946 /* PlayerScoreCard.swift */; };
+		2A3ADD1B8286DF5CA7CE46CB /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791EBBED6C5630DAE3C3C027 /* GameRecord.swift */; };
+		3382C2CEA13C1A745228CA40 /* GamePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989F769326303F267E937EF /* GamePlayer.swift */; };
+		3B7C35080B53A21C022668D5 /* RoundSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0A763E1D97F417269129E1 /* RoundSelection.swift */; };
+		3BFCD7F392163062CE9728C9 /* ScoringSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7DCEDB90FCE99EA8E03C5D /* ScoringSheet.swift */; };
+		3E3126243DB4D9599E1A266E /* RecordsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5238DA4B703BE9F82210A4B9 /* RecordsSheet.swift */; };
+		3EFD6AC31A055F4D41377886 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE270C832D94CDF6D625EB3B /* Player.swift */; };
+		472DED84219EE8AF7B130DCB /* ConfettiOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC953C8E3741E5C20E5313B7 /* ConfettiOverlay.swift */; };
+		640BD5079C83B0D6A7323862 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2986011DDD1F0328586D07E /* ContentView.swift */; };
+		711362C374030542F970CC47 /* ScoreEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3059127F195C59A2AAA1BD80 /* ScoreEvent.swift */; };
+		74FC0FF5B8B64A2AC0E5B218 /* ScoreTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C9D1C692A03829DE131006 /* ScoreTab.swift */; };
+		8156DFB7DA8F930E690969B5 /* PlayersTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737B8108072A5FDA67C63383 /* PlayersTab.swift */; };
+		924E08681B9B0B67EA0DDFA5 /* FlipColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E4784F601AB4CFF08E08E3 /* FlipColors.swift */; };
+		9634FAF091A4A7246C78DC2F /* ActivityFeedTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BE4F8D014E498DE407FCC1A /* ActivityFeedTab.swift */; };
+		9EE3BDAA1C3E7B00EFD7EA50 /* RoundDotsIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3889E8F8F7E389BA4A9F7790 /* RoundDotsIndicator.swift */; };
+		ADEA83A65CE3A4B7D1717A70 /* FlipAnimations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16497F4AB51A91119991AA06 /* FlipAnimations.swift */; };
+		BB6AC84B1401CE49832F235A /* PlayerAvatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */; };
+		BD9665F1B1E9739E23CE9FA4 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */; };
+		C5A1F27AB9EE8EE56B641030 /* TabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35990E576030A295B7EEFF8B /* TabPicker.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		01DC34DFE7B0ED9E499CC7AD /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
+		11C9D1C692A03829DE131006 /* ScoreTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreTab.swift; sourceTree = "<group>"; };
+		15FA0CB1F051D3B10EBA5F0C /* FlipTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipTypography.swift; sourceTree = "<group>"; };
+		16497F4AB51A91119991AA06 /* FlipAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipAnimations.swift; sourceTree = "<group>"; };
+		1989F769326303F267E937EF /* GamePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlayer.swift; sourceTree = "<group>"; };
+		2FB65601FB8F504558A38946 /* PlayerScoreCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScoreCard.swift; sourceTree = "<group>"; };
+		3059127F195C59A2AAA1BD80 /* ScoreEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEvent.swift; sourceTree = "<group>"; };
+		35990E576030A295B7EEFF8B /* TabPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPicker.swift; sourceTree = "<group>"; };
+		3889E8F8F7E389BA4A9F7790 /* RoundDotsIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundDotsIndicator.swift; sourceTree = "<group>"; };
+		40E4784F601AB4CFF08E08E3 /* FlipColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipColors.swift; sourceTree = "<group>"; };
+		5238DA4B703BE9F82210A4B9 /* RecordsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsSheet.swift; sourceTree = "<group>"; };
+		59AC89A4BD83593A5623826E /* FlipSevenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipSevenApp.swift; sourceTree = "<group>"; };
+		5A0A763E1D97F417269129E1 /* RoundSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundSelection.swift; sourceTree = "<group>"; };
+		5BE4F8D014E498DE407FCC1A /* ActivityFeedTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFeedTab.swift; sourceTree = "<group>"; };
+		737B8108072A5FDA67C63383 /* PlayersTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersTab.swift; sourceTree = "<group>"; };
+		791EBBED6C5630DAE3C3C027 /* GameRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
+		8DFA926E18D2229A599BC15F /* RulesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesTab.swift; sourceTree = "<group>"; };
+		B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
+		D411E164DEB651CC1C4479EF /* FlipSeven.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlipSeven.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		D64C3B385AD6650B9BB2451B /* NewGameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameSheet.swift; sourceTree = "<group>"; };
+		E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAvatar.swift; sourceTree = "<group>"; };
+		EC953C8E3741E5C20E5313B7 /* ConfettiOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiOverlay.swift; sourceTree = "<group>"; };
+		EF7DCEDB90FCE99EA8E03C5D /* ScoringSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringSheet.swift; sourceTree = "<group>"; };
+		F2986011DDD1F0328586D07E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FE270C832D94CDF6D625EB3B /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		03BCFCC851A390631B03A3DB /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				16497F4AB51A91119991AA06 /* FlipAnimations.swift */,
+				40E4784F601AB4CFF08E08E3 /* FlipColors.swift */,
+				15FA0CB1F051D3B10EBA5F0C /* FlipTypography.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		2D1671BA3A508FBAF4C1506E /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				87AFA01FEC7576E6EB1C9763 /* App */,
+				5CBA184B61862BBB9F023D60 /* Models */,
+				03BCFCC851A390631B03A3DB /* Theme */,
+				2FBA395F7FA3D55E09984EAC /* ViewModels */,
+				89391FE18545DFF17F6D9CCF /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		2FBA395F7FA3D55E09984EAC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		5CBA184B61862BBB9F023D60 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1989F769326303F267E937EF /* GamePlayer.swift */,
+				791EBBED6C5630DAE3C3C027 /* GameRecord.swift */,
+				FE270C832D94CDF6D625EB3B /* Player.swift */,
+				5A0A763E1D97F417269129E1 /* RoundSelection.swift */,
+				3059127F195C59A2AAA1BD80 /* ScoreEvent.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		87AFA01FEC7576E6EB1C9763 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				59AC89A4BD83593A5623826E /* FlipSevenApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		89391FE18545DFF17F6D9CCF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5BE4F8D014E498DE407FCC1A /* ActivityFeedTab.swift */,
+				F2986011DDD1F0328586D07E /* ContentView.swift */,
+				D64C3B385AD6650B9BB2451B /* NewGameSheet.swift */,
+				737B8108072A5FDA67C63383 /* PlayersTab.swift */,
+				5238DA4B703BE9F82210A4B9 /* RecordsSheet.swift */,
+				8DFA926E18D2229A599BC15F /* RulesTab.swift */,
+				11C9D1C692A03829DE131006 /* ScoreTab.swift */,
+				D2D2BCC31477525E3BB5CA59 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C64E5E261E1E7E6269E5B1FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D411E164DEB651CC1C4479EF /* FlipSeven.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D2D2BCC31477525E3BB5CA59 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				EC953C8E3741E5C20E5313B7 /* ConfettiOverlay.swift */,
+				B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */,
+				01DC34DFE7B0ED9E499CC7AD /* GlassCard.swift */,
+				E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */,
+				2FB65601FB8F504558A38946 /* PlayerScoreCard.swift */,
+				3889E8F8F7E389BA4A9F7790 /* RoundDotsIndicator.swift */,
+				EF7DCEDB90FCE99EA8E03C5D /* ScoringSheet.swift */,
+				35990E576030A295B7EEFF8B /* TabPicker.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		D89DF8974387F4B6CF32A4F6 = {
+			isa = PBXGroup;
+			children = (
+				2D1671BA3A508FBAF4C1506E /* Sources */,
+				C64E5E261E1E7E6269E5B1FA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5C401F29739321C418E2FF56 /* FlipSeven */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A0E49BF9F69E8A6F8AE22A3 /* Build configuration list for PBXNativeTarget "FlipSeven" */;
+			buildPhases = (
+				3D967A6037CA4B412299956C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FlipSeven;
+			packageProductDependencies = (
+			);
+			productName = FlipSeven;
+			productReference = D411E164DEB651CC1C4479EF /* FlipSeven.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F1B81131BF217825D092E5C5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1540;
+			};
+			buildConfigurationList = BABD13A675533FAE93EB154D /* Build configuration list for PBXProject "FlipSeven" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D89DF8974387F4B6CF32A4F6;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5C401F29739321C418E2FF56 /* FlipSeven */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D967A6037CA4B412299956C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9634FAF091A4A7246C78DC2F /* ActivityFeedTab.swift in Sources */,
+				472DED84219EE8AF7B130DCB /* ConfettiOverlay.swift in Sources */,
+				640BD5079C83B0D6A7323862 /* ContentView.swift in Sources */,
+				BD9665F1B1E9739E23CE9FA4 /* EmojiPicker.swift in Sources */,
+				ADEA83A65CE3A4B7D1717A70 /* FlipAnimations.swift in Sources */,
+				924E08681B9B0B67EA0DDFA5 /* FlipColors.swift in Sources */,
+				12ECBA4ADE1B1366F8AFB327 /* FlipSevenApp.swift in Sources */,
+				0EB7CC67664DCCFB345E1410 /* FlipTypography.swift in Sources */,
+				3382C2CEA13C1A745228CA40 /* GamePlayer.swift in Sources */,
+				2A3ADD1B8286DF5CA7CE46CB /* GameRecord.swift in Sources */,
+				1B49543A33F79872BB308666 /* GameViewModel.swift in Sources */,
+				1094F2680A28BDDD765C643C /* GlassCard.swift in Sources */,
+				071B71A68568EF70862751DF /* NewGameSheet.swift in Sources */,
+				3EFD6AC31A055F4D41377886 /* Player.swift in Sources */,
+				BB6AC84B1401CE49832F235A /* PlayerAvatar.swift in Sources */,
+				278BB0CD69264CEC98CACC8A /* PlayerScoreCard.swift in Sources */,
+				8156DFB7DA8F930E690969B5 /* PlayersTab.swift in Sources */,
+				3E3126243DB4D9599E1A266E /* RecordsSheet.swift in Sources */,
+				9EE3BDAA1C3E7B00EFD7EA50 /* RoundDotsIndicator.swift in Sources */,
+				3B7C35080B53A21C022668D5 /* RoundSelection.swift in Sources */,
+				1191424411D1ABBC08CB4292 /* RulesTab.swift in Sources */,
+				711362C374030542F970CC47 /* ScoreEvent.swift in Sources */,
+				74FC0FF5B8B64A2AC0E5B218 /* ScoreTab.swift in Sources */,
+				3BFCD7F392163062CE9728C9 /* ScoringSheet.swift in Sources */,
+				C5A1F27AB9EE8EE56B641030 /* TabPicker.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		437E6799245EE7552B2B5E49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		9D2FBA83F8A662E9DD6034FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5R2UKT4F8J;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dunnewold.FlipSeven;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		DBA694D3C2DC830F3FC374DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 5R2UKT4F8J;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dunnewold.FlipSeven;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FC0129AFFE2C5077D44ABD0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A0E49BF9F69E8A6F8AE22A3 /* Build configuration list for PBXNativeTarget "FlipSeven" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBA694D3C2DC830F3FC374DB /* Debug */,
+				9D2FBA83F8A662E9DD6034FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		BABD13A675533FAE93EB154D /* Build configuration list for PBXProject "FlipSeven" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				437E6799245EE7552B2B5E49 /* Debug */,
+				FC0129AFFE2C5077D44ABD0D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F1B81131BF217825D092E5C5 /* Project object */;
+}
