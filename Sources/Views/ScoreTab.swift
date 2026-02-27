@@ -46,15 +46,6 @@ struct ScoreTab: View {
             ) { points, isWin, isBust, selection in
                 vm.scorePlayer(id: gp.id, points: points, isWin: isWin, isBust: isBust, selection: selection)
                 scoringPlayer = nil
-                // Auto-advance to next unscored player, or next round if all scored
-                Task { @MainActor in
-                    try? await Task.sleep(for: .milliseconds(350))
-                    if let next = vm.nextUnscoredPlayer() {
-                        scoringPlayer = next
-                    } else {
-                        withAnimation(.flipBounce) { vm.nextRound() }
-                    }
-                }
             } onSaveDraft: { selection in
                 vm.saveDraftSelection(id: gp.id, selection: selection)
             }
