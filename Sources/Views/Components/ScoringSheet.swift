@@ -10,9 +10,9 @@ struct ScoringSheet: View {
     @State private var selectedModifiers: Set<Int>
     @State private var hasDoubler: Bool
     @State private var manualInput: String
-    @State private var useManual: Bool
+    @State private var isManualOverride: Bool
     @FocusState private var manualFocused: Bool
-    /// Set to true when the user presses Confirm or Bust so onDisappear skips the draft save.
+    /// Set to true when the user presses Confirm so onDisappear skips the draft save.
     @State private var wasConfirmed: Bool = false
 
     private let regularCols  = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
@@ -34,11 +34,21 @@ struct ScoringSheet: View {
         self.onSaveDraft = onSaveDraft
 
         let sel = initialSelection ?? RoundSelection()
-        _selectedRegular  = State(initialValue: sel.selectedRegular)
+        _selectedRegular   = State(initialValue: sel.selectedRegular)
         _selectedModifiers = State(initialValue: sel.selectedModifiers)
-        _hasDoubler       = State(initialValue: sel.hasDoubler)
-        _manualInput      = State(initialValue: sel.manualInput)
-        _useManual        = State(initialValue: sel.useManual)
+        _hasDoubler        = State(initialValue: sel.hasDoubler)
+        _isManualOverride  = State(initialValue: sel.useManual)
+
+        if sel.useManual {
+            _manualInput = State(initialValue: sel.manualInput.isEmpty ? "0" : sel.manualInput)
+        } else {
+            // Compute from existing card selections
+            let regular = sel.selectedRegular.reduce(0, +)
+            let mods    = sel.selectedModifiers.reduce(0, +)
+            let isWin   = sel.selectedRegular.count == 7
+            let pts     = (sel.hasDoubler ? regular * 2 : regular) + mods + (isWin ? 15 : 0)
+            _manualInput = State(initialValue: "\(pts)")
+        }
     }
 
     // MARK: - Computed
@@ -56,19 +66,17 @@ struct ScoringSheet: View {
     }
 
     var effectivePoints: Int {
-        useManual ? (Int(manualInput) ?? 0) : pointsFromCards
+        isManualOverride ? (Int(manualInput) ?? 0) : pointsFromCards
     }
 
-    var isConfirmDisabled: Bool {
-        useManual ? manualInput.isEmpty : totalSelected == 0
-    }
+    var isBust: Bool { effectivePoints == 0 }
 
     var currentSelection: RoundSelection {
         RoundSelection(
             selectedRegular: selectedRegular,
             selectedModifiers: selectedModifiers,
             hasDoubler: hasDoubler,
-            useManual: useManual,
+            useManual: isManualOverride,
             manualInput: manualInput
         )
     }
@@ -132,153 +140,178 @@ struct ScoringSheet: View {
                     .padding(.bottom, 8)
                 }
 
-                // ── Card grids (scrollable) ───────────────────────────────
-                if !useManual {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 14) {
-
-                            // Number cards 0–12
-                            sectionLabel("NUMBER CARDS")
-
-                            LazyVGrid(columns: regularCols, spacing: 8) {
-                                ForEach(0...12, id: \.self) { n in
-                                    cardChip(
-                                        label: "\(n)",
-                                        isSelected: selectedRegular.contains(n),
-                                        selectedColor: gamePlayer.themeColor,
-                                        idleColor: Color.white.opacity(0.12),
-                                        idleBorder: Color.white.opacity(0.28)
-                                    ) {
-                                        withAnimation(.flipBounce) {
-                                            selectedRegular.formSymmetricDifference([n])
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
-
-                            // Modifier cards +2 … +12
-                            sectionLabel("MODIFIER CARDS")
-
-                            LazyVGrid(columns: modifierCols, spacing: 8) {
-                                ForEach(modifierValues, id: \.self) { v in
-                                    cardChip(
-                                        label: "+\(v)",
-                                        isSelected: selectedModifiers.contains(v),
-                                        selectedColor: Color(hex: "E8B84B"),
-                                        idleColor: Color.flipPink.opacity(0.10),
-                                        idleBorder: Color.flipPink.opacity(0.35)
-                                    ) {
-                                        withAnimation(.flipBounce) {
-                                            selectedModifiers.formSymmetricDifference([v])
-                                        }
-                                    }
-                                }
-                                cardChip(
-                                    label: "2×",
-                                    isSelected: hasDoubler,
-                                    selectedColor: Color(hex: "FF4E50"),
-                                    idleColor: Color(hex: "FF4E50").opacity(0.10),
-                                    idleBorder: Color(hex: "FF4E50").opacity(0.40)
-                                ) {
-                                    withAnimation(.flipBounce) { hasDoubler.toggle() }
-                                }
-                            }
-                            .padding(.horizontal)
-                            .padding(.bottom, 12)
-                        }
-                        .padding(.top, 4)
-                    }
-                }
-
-                // ── Manual toggle / input ────────────────────────────────
-                Button {
-                    withAnimation {
-                        useManual.toggle()
-                        selectedRegular.removeAll()
-                        selectedModifiers.removeAll()
-                        hasDoubler = false
-                        manualInput = ""
-                    }
-                } label: {
-                    Text(useManual ? "Use card grid" : "Enter manually")
-                        .font(.flipCaption())
-                        .foregroundStyle(.white.opacity(0.65))
-                }
-                .padding(.top, 10)
-                .padding(.bottom, 6)
-
-                if useManual {
-                    TextField("Points", text: $manualInput)
+                // ── Prominent score input ────────────────────────────────
+                VStack(spacing: 4) {
+                    TextField("0", text: $manualInput)
                         .keyboardType(.numberPad)
                         .focused($manualFocused)
                         .font(.flipScore())
-                        .foregroundStyle(.white)
+                        .foregroundStyle(isBust ? Color.red.opacity(0.8) : .white)
                         .multilineTextAlignment(.center)
-                        .padding()
-                        .background(Color.white.opacity(0.1))
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .padding(.horizontal)
-                        .onAppear { manualFocused = true }
+                        .onChange(of: manualInput) { _, newVal in
+                            // Keep only digits
+                            let filtered = newVal.filter { $0.isNumber }
+                            if filtered != newVal { manualInput = filtered }
+                        }
+                        .onChange(of: manualFocused) { _, focused in
+                            if focused { isManualOverride = true }
+                        }
+
+                    if isBust {
+                        Text("BUST 💥")
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.red.opacity(0.8))
+                            .tracking(1.4)
+                            .transition(.scale.combined(with: .opacity))
+                    } else if !isManualOverride && (totalSelected > 0 || hasDoubler) {
+                        tallyText
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                    } else if isManualOverride {
+                        Text("manual entry")
+                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.4))
+                    } else {
+                        Text("tap cards or edit above")
+                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.35))
+                    }
+                }
+                .padding(.vertical, 14)
+                .frame(maxWidth: .infinity)
+                .background(Color.white.opacity(0.08))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(
+                            isBust ? Color.red.opacity(0.4) : gamePlayer.themeColor.opacity(0.3),
+                            lineWidth: 1.5
+                        )
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+                .onTapGesture {
+                    isManualOverride = true
+                    manualFocused = true
                 }
 
-                // ── Tally ────────────────────────────────────────────────
-                if !useManual && (totalSelected > 0 || hasDoubler) {
-                    tallyText
-                        .font(.flipBody())
-                        .foregroundStyle(.white.opacity(0.85))
-                        .padding(.vertical, 6)
+                // Reset to card calculation link
+                if isManualOverride && totalSelected > 0 {
+                    Button {
+                        withAnimation {
+                            isManualOverride = false
+                            manualInput = "\(pointsFromCards)"
+                        }
+                    } label: {
+                        Text("Use card total (\(pointsFromCards) pts)")
+                            .font(.flipCaption())
+                            .foregroundStyle(.white.opacity(0.55))
+                    }
+                    .padding(.bottom, 6)
+                }
+
+                // ── Card grids (scrollable) ───────────────────────────────
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 14) {
+
+                        // Number cards 0–12
+                        sectionLabel("NUMBER CARDS")
+
+                        LazyVGrid(columns: regularCols, spacing: 8) {
+                            ForEach(0...12, id: \.self) { n in
+                                cardChip(
+                                    label: "\(n)",
+                                    isSelected: selectedRegular.contains(n),
+                                    selectedColor: gamePlayer.themeColor,
+                                    idleColor: Color.white.opacity(0.12),
+                                    idleBorder: Color.white.opacity(0.28)
+                                ) {
+                                    withAnimation(.flipBounce) {
+                                        selectedRegular.formSymmetricDifference([n])
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+
+                        // Modifier cards +2 … +12
+                        sectionLabel("MODIFIER CARDS")
+
+                        LazyVGrid(columns: modifierCols, spacing: 8) {
+                            ForEach(modifierValues, id: \.self) { v in
+                                cardChip(
+                                    label: "+\(v)",
+                                    isSelected: selectedModifiers.contains(v),
+                                    selectedColor: Color(hex: "E8B84B"),
+                                    idleColor: Color.flipPink.opacity(0.10),
+                                    idleBorder: Color.flipPink.opacity(0.35)
+                                ) {
+                                    withAnimation(.flipBounce) {
+                                        selectedModifiers.formSymmetricDifference([v])
+                                    }
+                                }
+                            }
+                            cardChip(
+                                label: "2×",
+                                isSelected: hasDoubler,
+                                selectedColor: Color(hex: "FF4E50"),
+                                idleColor: Color(hex: "FF4E50").opacity(0.10),
+                                idleBorder: Color(hex: "FF4E50").opacity(0.40)
+                            ) {
+                                withAnimation(.flipBounce) {
+                                    hasDoubler.toggle()
+                                }
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 12)
+                    }
+                    .padding(.top, 4)
                 }
 
                 Spacer(minLength: 8)
 
-                // ── Action buttons ───────────────────────────────────────
-                HStack(spacing: 12) {
-                    Button {
-                        wasConfirmed = true
-                        onConfirm(0, false, true, currentSelection)
-                    } label: {
-                        Text("Bust 💥")
-                            .font(.flipBody())
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Color.red.opacity(0.35))
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                // ── Confirm button ───────────────────────────────────────
+                Button {
+                    wasConfirmed = true
+                    let pts = effectivePoints
+                    let bust = pts == 0
+                    onConfirm(pts, isWinner && !bust, bust, currentSelection)
+                } label: {
+                    HStack(spacing: 8) {
+                        if isBust {
+                            Text("Confirm Bust 💥")
+                        } else {
+                            Text("Confirm  \(effectivePoints) pts")
+                        }
                     }
-                    .buttonStyle(.plain)
-
-                    Button {
-                        wasConfirmed = true
-                        onConfirm(effectivePoints, isWinner, false, currentSelection)
-                    } label: {
-                        Text("Confirm")
-                            .font(.flipBody())
-                            .foregroundStyle(.black)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(LinearGradient.flipPrimary)
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(isConfirmDisabled)
+                    .font(.flipBody())
+                    .foregroundStyle(isBust ? .white : .black)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(isBust ? Color.red.opacity(0.5) : LinearGradient.flipPrimary)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
+                .buttonStyle(.plain)
+                .animation(.flipBounce, value: isBust)
                 .padding(.horizontal)
                 .padding(.bottom, 28)
                 .padding(.top, 8)
             }
         }
         .animation(.flipBounce, value: isWinner)
+        .animation(.easeInOut(duration: 0.2), value: isBust)
+        .onChange(of: pointsFromCards) { _, newVal in
+            if !isManualOverride {
+                manualInput = "\(newVal)"
+            }
+        }
         .onDisappear {
-            // Save card picks as a draft if the user didn't press Confirm/Bust.
-            // This covers both the X button and swipe-to-dismiss.
             if !wasConfirmed {
                 onSaveDraft(currentSelection)
             }
         }
     }
-
-    // ── Helpers ──────────────────────────────────────────────────────────
 
     @ViewBuilder
     private func sectionLabel(_ text: String) -> some View {
