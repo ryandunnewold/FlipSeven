@@ -289,7 +289,7 @@ struct ScoringSheet: View {
                     .foregroundStyle(isBust ? .white : .black)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
-                    .background(isBust ? Color.red.opacity(0.5) : LinearGradient.flipPrimary)
+                    .background(isBust ? AnyShapeStyle(Color.red.opacity(0.5)) : AnyShapeStyle(LinearGradient.flipPrimary))
                     .clipShape(RoundedRectangle(cornerRadius: 14))
                 }
                 .buttonStyle(.plain)

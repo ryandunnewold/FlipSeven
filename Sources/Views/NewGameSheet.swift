@@ -93,75 +93,75 @@ struct NewGameSheet: View {
 
     @ViewBuilder
     private func rosterRow(_ player: Player) -> some View {
-        GlassCard {
-            VStack(spacing: 0) {
-                HStack(spacing: 12) {
-                    Button {
-                        withAnimation(.flipBounce) {
-                            if selectedIds.contains(player.id) {
-                                selectedIds.remove(player.id)
-                            } else {
-                                selectedIds.insert(player.id)
-                            }
-                        }
-                    } label: {
-                        Image(systemName: selectedIds.contains(player.id)
-                              ? "checkmark.circle.fill" : "circle")
-                            .font(.title3)
-                            .foregroundStyle(selectedIds.contains(player.id)
-                                             ? Color.flipPink : .white.opacity(0.4))
-                    }
-                    .buttonStyle(.plain)
-
-                    Button {
-                        withAnimation {
-                            editingEmojiFor = editingEmojiFor == player.id ? nil : player.id
-                        }
-                    } label: {
-                        Text(player.emoji)
-                            .font(.title2)
-                            .frame(width: 44, height: 44)
-                            .background {
-                                Circle()
-                                    .fill(player.themeColor.opacity(0.25))
-                                    .overlay {
-                                        Circle().strokeBorder(player.themeColor, lineWidth: 1.5)
-                                    }
-                            }
-                    }
-                    .buttonStyle(.plain)
-
-                    Text(player.name)
-                        .font(.flipBody())
-                        .foregroundStyle(.white)
-
-                    Spacer()
-
-                    Button {
-                        withAnimation(.flipBounce) {
-                            selectedIds.remove(player.id)
-                            vm.removeFromRoster(id: player.id)
-                        }
-                    } label: {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.title3)
-                            .foregroundStyle(.red.opacity(0.7))
-                    }
-                    .buttonStyle(.plain)
+        let isSelected = selectedIds.contains(player.id)
+        Button {
+            withAnimation(.flipBounce) {
+                if isSelected {
+                    selectedIds.remove(player.id)
+                } else {
+                    selectedIds.insert(player.id)
                 }
-                .padding(14)
+            }
+        } label: {
+            GlassCard {
+                VStack(spacing: 0) {
+                    HStack(spacing: 12) {
+                        Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                            .font(.title3)
+                            .foregroundStyle(isSelected ? Color.flipPink : .white.opacity(0.4))
+                            .animation(.flipBounce, value: isSelected)
 
-                if editingEmojiFor == player.id {
-                    Divider()
-                        .background(Color.white.opacity(0.1))
-                    EmojiPicker(selected: Binding(
-                        get: { player.emoji },
-                        set: { vm.updatePlayerEmoji(id: player.id, emoji: $0) }
-                    ))
-                    .padding(12)
+                        Button {
+                            withAnimation {
+                                editingEmojiFor = editingEmojiFor == player.id ? nil : player.id
+                            }
+                        } label: {
+                            Text(player.emoji)
+                                .font(.title2)
+                                .frame(width: 44, height: 44)
+                                .background {
+                                    Circle()
+                                        .fill(player.themeColor.opacity(0.25))
+                                        .overlay {
+                                            Circle().strokeBorder(player.themeColor, lineWidth: 1.5)
+                                        }
+                                }
+                        }
+                        .buttonStyle(.plain)
+
+                        Text(player.name)
+                            .font(.flipBody())
+                            .foregroundStyle(.white)
+
+                        Spacer()
+
+                        Button {
+                            withAnimation(.flipBounce) {
+                                selectedIds.remove(player.id)
+                                vm.removeFromRoster(id: player.id)
+                            }
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.red.opacity(0.7))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(14)
+
+                    if editingEmojiFor == player.id {
+                        Divider()
+                            .background(Color.white.opacity(0.1))
+                        EmojiPicker(selected: Binding(
+                            get: { player.emoji },
+                            set: { vm.updatePlayerEmoji(id: player.id, emoji: $0) }
+                        ))
+                        .padding(12)
+                    }
                 }
             }
         }
+        .buttonStyle(.plain)
     }
 
     private var addPlayerCard: some View {

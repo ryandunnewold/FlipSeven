@@ -11,36 +11,36 @@ struct PlayerScoreCard: View {
     }
 
     var body: some View {
-        GlassCard {
-            HStack(spacing: 12) {
-                PlayerAvatar(emoji: gamePlayer.emoji, color: gamePlayer.themeColor, size: 48)
+        Button(action: onScoreTap) {
+            GlassCard {
+                HStack(spacing: 12) {
+                    PlayerAvatar(emoji: gamePlayer.emoji, color: gamePlayer.themeColor, size: 48)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(gamePlayer.name)
-                        .font(.flipBody())
-                        .foregroundStyle(.white)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(gamePlayer.name)
+                            .font(.flipBody())
+                            .foregroundStyle(.white)
 
-                    Text("\(gamePlayer.roundWins)W – \(gamePlayer.busts)L")
-                        .font(.flipCaption())
-                        .foregroundStyle(.white.opacity(0.6))
+                        Text("\(gamePlayer.roundWins)W – \(gamePlayer.busts)L")
+                            .font(.flipCaption())
+                            .foregroundStyle(.white.opacity(0.6))
 
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(Color.white.opacity(0.15))
-                                .frame(height: 6)
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(gamePlayer.themeColor)
-                                .frame(width: geo.size.width * progress, height: 6)
-                                .animation(.flipSnap, value: progress)
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(Color.white.opacity(0.15))
+                                    .frame(height: 6)
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(gamePlayer.themeColor)
+                                    .frame(width: geo.size.width * progress, height: 6)
+                                    .animation(.flipSnap, value: progress)
+                            }
                         }
+                        .frame(height: 6)
                     }
-                    .frame(height: 6)
-                }
 
-                Spacer()
+                    Spacer()
 
-                Button(action: onScoreTap) {
                     VStack(spacing: 2) {
                         Text("\(gamePlayer.score)")
                             .font(.flipScore())
@@ -72,11 +72,11 @@ struct PlayerScoreCard: View {
                             }
                             .shadow(color: isScored ? gamePlayer.themeColor.opacity(0.5) : .clear, radius: 6)
                     }
+                    .animation(.flipSnap, value: isScored)
                 }
-                .buttonStyle(.plain)
-                .animation(.flipSnap, value: isScored)
+                .padding(14)
             }
-            .padding(14)
         }
+        .buttonStyle(.plain)
     }
 }

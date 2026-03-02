@@ -159,6 +159,66 @@ final class GameViewModel {
         currentRoundSelections[id] = selection
     }
 
+    /// Edit a score from a completed past round, then recompute all player totals.
+    func editHistoryScore(roundIdx: Int, id: UUID, points: Int, isWin: Bool, isBust: Bool, selection: RoundSelection) {
+        guard roundIdx < roundHistory.count else { return }
+        var sel = selection
+        sel.isConfirmed = true
+        sel.appliedPoints = isBust ? 0 : points
+        sel.appliedWin = isWin && !isBust
+        sel.appliedBust = isBust
+        roundHistory[roundIdx][id] = sel
+        recomputeScores()
+
+        // Refresh activity feed entry for this player/round
+        scoreEvents.removeAll { $0.playerId == id && $0.round == roundIdx + 1 }
+        if let idx = gamePlayers.firstIndex(where: { $0.id == id }) {
+            let gp = gamePlayers[idx]
+            scoreEvents.append(ScoreEvent(
+                round: roundIdx + 1,
+                playerId: id,
+                playerName: gp.name,
+                playerEmoji: gp.emoji,
+                playerColorIndex: gp.player.colorIndex,
+                points: isBust ? 0 : points,
+                isRoundWin: isWin && !isBust,
+                isBust: isBust
+            ))
+        }
+    }
+
+    /// Recompute every player's score / roundWins / busts from the full round history
+    /// plus any confirmed current-round scores.
+    private func recomputeScores() {
+        for i in gamePlayers.indices {
+            gamePlayers[i].score = 0
+            gamePlayers[i].roundWins = 0
+            gamePlayers[i].busts = 0
+        }
+        for roundSelections in roundHistory {
+            for (playerId, sel) in roundSelections {
+                guard sel.isConfirmed else { continue }
+                guard let idx = gamePlayers.firstIndex(where: { $0.id == playerId }) else { continue }
+                if sel.appliedBust {
+                    gamePlayers[idx].busts += 1
+                } else {
+                    gamePlayers[idx].score += sel.appliedPoints
+                    if sel.appliedWin { gamePlayers[idx].roundWins += 1 }
+                }
+            }
+        }
+        for (playerId, sel) in currentRoundSelections {
+            guard sel.isConfirmed else { continue }
+            guard let idx = gamePlayers.firstIndex(where: { $0.id == playerId }) else { continue }
+            if sel.appliedBust {
+                gamePlayers[idx].busts += 1
+            } else {
+                gamePlayers[idx].score += sel.appliedPoints
+                if sel.appliedWin { gamePlayers[idx].roundWins += 1 }
+            }
+        }
+    }
+
     /// Confirm a player's score for this round. Supports re-confirming (undoes previous
     /// contribution first so the score stays correct).
     func scorePlayer(id: UUID, points: Int, isWin: Bool, isBust: Bool, selection: RoundSelection) {
