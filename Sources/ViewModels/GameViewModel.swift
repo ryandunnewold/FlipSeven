@@ -271,7 +271,7 @@ final class GameViewModel {
     private func triggerConfetti() {
         showConfetti = true
         Task {
-            try? await Task.sleep(for: .seconds(4))
+            try? await Task.sleep(for: .seconds(10))
             showConfetti = false
         }
     }
