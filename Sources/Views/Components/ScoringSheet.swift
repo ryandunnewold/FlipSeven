@@ -226,6 +226,7 @@ struct ScoringSheet: View {
                                     idleColor: Color.white.opacity(0.12),
                                     idleBorder: Color.white.opacity(0.28)
                                 ) {
+                                    Haptics.selection()
                                     withAnimation(.flipBounce) {
                                         selectedRegular.formSymmetricDifference([n])
                                     }
@@ -246,6 +247,7 @@ struct ScoringSheet: View {
                                     idleColor: Color.flipPink.opacity(0.10),
                                     idleBorder: Color.flipPink.opacity(0.35)
                                 ) {
+                                    Haptics.selection()
                                     withAnimation(.flipBounce) {
                                         selectedModifiers.formSymmetricDifference([v])
                                     }
@@ -258,6 +260,7 @@ struct ScoringSheet: View {
                                 idleColor: Color(hex: "FF4E50").opacity(0.10),
                                 idleBorder: Color(hex: "FF4E50").opacity(0.40)
                             ) {
+                                Haptics.selection()
                                 withAnimation(.flipBounce) {
                                     hasDoubler.toggle()
                                 }
@@ -274,6 +277,7 @@ struct ScoringSheet: View {
                 // ── Confirm button ───────────────────────────────────────
                 Button {
                     wasConfirmed = true
+                    Haptics.impact(.medium)
                     let pts = effectivePoints
                     let bust = pts == 0
                     onConfirm(pts, isWinner && !bust, bust, currentSelection)
@@ -297,6 +301,7 @@ struct ScoringSheet: View {
                 .padding(.horizontal)
                 .padding(.bottom, 28)
                 .padding(.top, 8)
+                .accessibilityLabel(isBust ? "Confirm bust" : "Confirm \(effectivePoints) points")
             }
         }
         .animation(.flipBounce, value: isWinner)
@@ -373,5 +378,8 @@ struct ScoringSheet: View {
         .buttonStyle(.plain)
         .scaleEffect(isSelected ? 1.04 : 1.0)
         .animation(.flipBounce, value: isSelected)
+        .accessibilityLabel("Card \(label)")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+        .accessibilityHint(isSelected ? "Tap to deselect" : "Tap to select")
     }
 }

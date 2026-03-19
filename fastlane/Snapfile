@@ -1,0 +1,15 @@
+scheme("FlipSevenUITests")
+
+devices([
+  "iPhone 17 Pro Max",
+  "iPhone 17 Pro",
+  "iPhone 17"
+])
+
+languages(["en-US"])
+
+output_directory("./fastlane/screenshots")
+clear_previous_screenshots(true)
+
+override_status_bar(true)
+dark_mode(true)

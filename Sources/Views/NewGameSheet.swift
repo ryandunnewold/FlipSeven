@@ -79,6 +79,7 @@ struct NewGameSheet: View {
                 .disabled(!canStart)
                 .padding(.horizontal)
                 .padding(.bottom, 32)
+                .accessibilityLabel(canStart ? "Start game with \(selectedIds.count) players" : "Select at least 2 players to start")
                 .background {
                     LinearGradient(
                         colors: [.clear, Color(hex: "1a0533").opacity(0.97)],
