@@ -9,19 +9,57 @@ settings:
   base:
     SWIFT_STRICT_CONCURRENCY: complete
     IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-    TARGETED_DEVICE_FAMILY: "1"
+    TARGETED_DEVICE_FAMILY: 1
     SWIFT_VERSION: "6.0"
     INFOPLIST_FILE: Resources/Info.plist
     ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
     GENERATE_INFOPLIST_FILE: NO
+    CURRENT_PROJECT_VERSION: 1
+    VERSIONING_SYSTEM: "apple-generic"
+    MARKETING_VERSION: "1.0.0"
 targets:
   FlipSeven:
     type: application
     platform: iOS
     sources:
       - Sources
-    resources:
-      - Resources
+      - path: Resources/Assets.xcassets
+      - path: Resources/Info.plist
+        buildPhase: none
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.dunnewold.FlipSeven
+        DEVELOPMENT_TEAM: 5R2UKT4F8J
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: 1
+  FlipSevenUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - UITests
+    dependencies:
+      - target: FlipSeven
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dunnewold.FlipSeven.UITests
+        DEVELOPMENT_TEAM: 5R2UKT4F8J
+        CODE_SIGN_STYLE: Automatic
+        TEST_TARGET_NAME: FlipSeven
+schemes:
+  FlipSeven:
+    build:
+      targets:
+        FlipSeven: all
+        FlipSevenUITests: [test]
+    test:
+      targets:
+        - FlipSevenUITests
+  FlipSevenUITests:
+    build:
+      targets:
+        FlipSeven: all
+        FlipSevenUITests: [test]
+    test:
+      targets:
+        - FlipSevenUITests

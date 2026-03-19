@@ -17,5 +17,6 @@ struct PlayerAvatar: View {
                 .font(.system(size: size * 0.45))
         }
         .frame(width: size, height: size)
+        .accessibilityHidden(true)
     }
 }

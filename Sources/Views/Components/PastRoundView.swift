@@ -4,17 +4,41 @@ struct PastRoundView: View {
     let roundNum: Int
     let selections: [UUID: RoundSelection]
     let gamePlayers: [GamePlayer]
+    /// Non-nil when editing is supported. Called with the tapped player.
+    var onEditPlayer: ((GamePlayer) -> Void)? = nil
+
+    @State private var isEditing = false
 
     var body: some View {
         ScrollView {
             VStack(spacing: 12) {
                 ForEach(sortedPlayers) { gp in
                     pastRoundCard(gp: gp, selection: selections[gp.id])
+                        .onTapGesture {
+                            guard isEditing else { return }
+                            onEditPlayer?(gp)
+                        }
+                        .overlay(alignment: .topTrailing) {
+                            if isEditing {
+                                Image(systemName: "pencil.circle.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundStyle(Color.flipPink)
+                                    .padding(10)
+                            }
+                        }
+                }
+
+                if onEditPlayer != nil {
+                    editRoundButton
+                        .padding(.top, 4)
                 }
             }
             .padding(.horizontal)
             .padding(.top, 8)
             .padding(.bottom, 20)
+        }
+        .onChange(of: roundNum) { _, _ in
+            isEditing = false
         }
     }
 
@@ -82,5 +106,37 @@ struct PastRoundView: View {
             }
             .padding(14)
         }
+        .opacity(isEditing ? 0.85 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: isEditing)
+    }
+
+    private var editRoundButton: some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) { isEditing.toggle() }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: isEditing ? "checkmark" : "pencil")
+                    .font(.system(size: 13, weight: .semibold))
+                Text(isEditing ? "Done Editing" : "Edit Round")
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+            }
+            .foregroundStyle(isEditing ? Color.white : Color.flipPink)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 20)
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isEditing
+                          ? Color.white.opacity(0.12)
+                          : Color.flipPink.opacity(0.15))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(
+                                isEditing ? Color.white.opacity(0.2) : Color.flipPink.opacity(0.5),
+                                lineWidth: 1
+                            )
+                    }
+            }
+        }
+        .buttonStyle(.plain)
     }
 }

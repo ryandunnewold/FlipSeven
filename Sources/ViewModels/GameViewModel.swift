@@ -14,6 +14,7 @@ final class GameViewModel {
            let saved = try? JSONDecoder().decode([GameRecord].self, from: data) {
             gameHistory = saved
         }
+        restoreActiveGame()
     }
 
     private func saveRoster() {
@@ -27,6 +28,58 @@ final class GameViewModel {
             UserDefaults.standard.set(data, forKey: historyKey)
         }
     }
+
+    // MARK: - Active game state persistence
+
+    private let activeGameKey = "flip7.activeGame"
+
+    private struct ActiveGameState: Codable {
+        let gamePlayers: [GamePlayer]
+        let roundNum: Int
+        let currentRoundSelections: [UUID: RoundSelection]
+        let roundHistory: [[UUID: RoundSelection]]
+        let scoreEvents: [ScoreEvent]
+    }
+
+    private func saveActiveGame() {
+        guard hasActiveGame else {
+            UserDefaults.standard.removeObject(forKey: activeGameKey)
+            return
+        }
+        let state = ActiveGameState(
+            gamePlayers: gamePlayers,
+            roundNum: roundNum,
+            currentRoundSelections: currentRoundSelections,
+            roundHistory: roundHistory,
+            scoreEvents: scoreEvents
+        )
+        if let data = try? JSONEncoder().encode(state) {
+            UserDefaults.standard.set(data, forKey: activeGameKey)
+        }
+    }
+
+    private func restoreActiveGame() {
+        guard let data = UserDefaults.standard.data(forKey: activeGameKey),
+              let state = try? JSONDecoder().decode(ActiveGameState.self, from: data) else { return }
+        gamePlayers = state.gamePlayers
+        roundNum = state.roundNum
+        currentRoundSelections = state.currentRoundSelections
+        roundHistory = state.roundHistory
+        scoreEvents = state.scoreEvents
+        hasActiveGame = true
+
+        // In winner snapshot mode, auto-trigger confetti without auto-dismiss
+        if ProcessInfo.processInfo.arguments.contains("-SNAPSHOT_WINNER"),
+           let winner = gameWinner {
+            confirmedWinner = winner
+            showConfetti = true
+        }
+    }
+
+    private func clearActiveGame() {
+        UserDefaults.standard.removeObject(forKey: activeGameKey)
+    }
+
     var gamePlayers: [GamePlayer] = []
     var roundNum: Int = 1
     var hasActiveGame: Bool = false
@@ -92,6 +145,8 @@ final class GameViewModel {
         currentRoundSelections = [:]
         roundHistory = []
         scoreEvents = []
+        Haptics.notification(.success)
+        saveActiveGame()
     }
 
     func endGame() {
@@ -131,6 +186,7 @@ final class GameViewModel {
         currentRoundSelections = [:]
         roundHistory = []
         scoreEvents = []
+        clearActiveGame()
     }
 
     func nextRound() {
@@ -141,6 +197,7 @@ final class GameViewModel {
         roundHistory.append(currentRoundSelections)
         roundNum += 1
         currentRoundSelections = [:]
+        saveActiveGame()
     }
 
     /// Returns the first game player who has not yet had their score confirmed this round.
@@ -157,6 +214,66 @@ final class GameViewModel {
         // Don't overwrite an already-confirmed entry with a draft
         if let existing = currentRoundSelections[id], existing.isConfirmed { return }
         currentRoundSelections[id] = selection
+    }
+
+    /// Edit a score from a completed past round, then recompute all player totals.
+    func editHistoryScore(roundIdx: Int, id: UUID, points: Int, isWin: Bool, isBust: Bool, selection: RoundSelection) {
+        guard roundIdx < roundHistory.count else { return }
+        var sel = selection
+        sel.isConfirmed = true
+        sel.appliedPoints = isBust ? 0 : points
+        sel.appliedWin = isWin && !isBust
+        sel.appliedBust = isBust
+        roundHistory[roundIdx][id] = sel
+        recomputeScores()
+
+        // Refresh activity feed entry for this player/round
+        scoreEvents.removeAll { $0.playerId == id && $0.round == roundIdx + 1 }
+        if let idx = gamePlayers.firstIndex(where: { $0.id == id }) {
+            let gp = gamePlayers[idx]
+            scoreEvents.append(ScoreEvent(
+                round: roundIdx + 1,
+                playerId: id,
+                playerName: gp.name,
+                playerEmoji: gp.emoji,
+                playerColorIndex: gp.player.colorIndex,
+                points: isBust ? 0 : points,
+                isRoundWin: isWin && !isBust,
+                isBust: isBust
+            ))
+        }
+    }
+
+    /// Recompute every player's score / roundWins / busts from the full round history
+    /// plus any confirmed current-round scores.
+    private func recomputeScores() {
+        for i in gamePlayers.indices {
+            gamePlayers[i].score = 0
+            gamePlayers[i].roundWins = 0
+            gamePlayers[i].busts = 0
+        }
+        for roundSelections in roundHistory {
+            for (playerId, sel) in roundSelections {
+                guard sel.isConfirmed else { continue }
+                guard let idx = gamePlayers.firstIndex(where: { $0.id == playerId }) else { continue }
+                if sel.appliedBust {
+                    gamePlayers[idx].busts += 1
+                } else {
+                    gamePlayers[idx].score += sel.appliedPoints
+                    if sel.appliedWin { gamePlayers[idx].roundWins += 1 }
+                }
+            }
+        }
+        for (playerId, sel) in currentRoundSelections {
+            guard sel.isConfirmed else { continue }
+            guard let idx = gamePlayers.firstIndex(where: { $0.id == playerId }) else { continue }
+            if sel.appliedBust {
+                gamePlayers[idx].busts += 1
+            } else {
+                gamePlayers[idx].score += sel.appliedPoints
+                if sel.appliedWin { gamePlayers[idx].roundWins += 1 }
+            }
+        }
     }
 
     /// Confirm a player's score for this round. Supports re-confirming (undoes previous
@@ -206,6 +323,9 @@ final class GameViewModel {
             isRoundWin: isWin && !isBust,
             isBust: isBust
         ))
+
+        Haptics.notification(isBust ? .warning : (isWin ? .success : .success))
+        saveActiveGame()
     }
 
     private func triggerConfetti() {

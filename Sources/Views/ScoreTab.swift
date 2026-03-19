@@ -4,6 +4,10 @@ struct ScoreTab: View {
     @Environment(GameViewModel.self) private var vm
     @State private var scoringPlayer: GamePlayer? = nil
     @State private var displayedRound: Int = 0
+    @State private var showRoundComplete: Bool = false
+    @State private var completedRoundNum: Int = 0
+    /// Non-nil while editing a past round (0-based index into roundHistory).
+    @State private var editingRoundIdx: Int? = nil
 
     private var currentPageIndex: Int { vm.roundNum - 1 }
 
@@ -22,7 +26,11 @@ struct ScoreTab: View {
                         PastRoundView(
                             roundNum: idx + 1,
                             selections: vm.roundHistory[idx],
-                            gamePlayers: vm.gamePlayers
+                            gamePlayers: vm.gamePlayers,
+                            onEditPlayer: { gp in
+                                editingRoundIdx = idx
+                                scoringPlayer = gp
+                            }
                         )
                         .tag(idx)
                     } else {
@@ -35,21 +43,58 @@ struct ScoreTab: View {
         }
         .onAppear { displayedRound = currentPageIndex }
         .onChange(of: vm.roundNum) { _, _ in
-            withAnimation(.easeInOut(duration: 0.35)) {
-                displayedRound = currentPageIndex
-            }
+            displayedRound = currentPageIndex
         }
         .sheet(item: $scoringPlayer) { gp in
+            let roundIdx = editingRoundIdx
+            let initialSelection: RoundSelection? = roundIdx.map { vm.roundHistory[$0][gp.id] }
+                ?? vm.currentRoundSelections[gp.id]
             ScoringSheet(
                 gamePlayer: gp,
-                initialSelection: vm.currentRoundSelections[gp.id]
+                initialSelection: initialSelection
             ) { points, isWin, isBust, selection in
-                vm.scorePlayer(id: gp.id, points: points, isWin: isWin, isBust: isBust, selection: selection)
-                scoringPlayer = nil
+                if let roundIdx {
+                    vm.editHistoryScore(
+                        roundIdx: roundIdx,
+                        id: gp.id,
+                        points: points,
+                        isWin: isWin,
+                        isBust: isBust,
+                        selection: selection
+                    )
+                    scoringPlayer = nil
+                    editingRoundIdx = nil
+                } else {
+                    vm.scorePlayer(id: gp.id, points: points, isWin: isWin, isBust: isBust, selection: selection)
+                    scoringPlayer = nil
+                    // Auto-advance to next unscored player, or show round-complete animation then advance
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .milliseconds(350))
+                        if let next = vm.nextUnscoredPlayer() {
+                            scoringPlayer = next
+                        } else {
+                            completedRoundNum = vm.roundNum
+                            showRoundComplete = true
+                        }
+                    }
+                }
             } onSaveDraft: { selection in
-                vm.saveDraftSelection(id: gp.id, selection: selection)
+                if editingRoundIdx == nil {
+                    vm.saveDraftSelection(id: gp.id, selection: selection)
+                }
+            }
+            .id(gp.id)
+        }
+        .overlay {
+            if showRoundComplete {
+                RoundCompleteOverlay(roundNum: completedRoundNum) {
+                    showRoundComplete = false
+                    withAnimation(.flipBounce) { vm.nextRound() }
+                }
+                .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 0.2), value: showRoundComplete)
     }
 
     // MARK: - Round tracker header
@@ -59,9 +104,7 @@ struct ScoreTab: View {
             // Back arrow / past-round hint
             if vm.roundNum > 1 {
                 Button {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        displayedRound = max(0, displayedRound - 1)
-                    }
+                    displayedRound = max(0, displayedRound - 1)
                 } label: {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 14, weight: .semibold))
@@ -92,9 +135,7 @@ struct ScoreTab: View {
             // Forward arrow (back to current)
             if displayedRound < currentPageIndex {
                 Button {
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        displayedRound = min(currentPageIndex, displayedRound + 1)
-                    }
+                    displayedRound = min(currentPageIndex, displayedRound + 1)
                 } label: {
                     Image(systemName: "chevron.right")
                         .font(.system(size: 14, weight: .semibold))
@@ -134,23 +175,6 @@ struct ScoreTab: View {
                         scoringPlayer = gp
                     }
                 }
-
-                Button {
-                    withAnimation(.flipBounce) { vm.nextRound() }
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "arrow.right.circle.fill")
-                        Text("Next Round!")
-                    }
-                    .font(.flipBody())
-                    .foregroundStyle(.black)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(LinearGradient.flipPrimary)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                }
-                .buttonStyle(.plain)
-                .padding(.top, 4)
             }
             .padding(.horizontal)
             .padding(.top, 8)
