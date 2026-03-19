@@ -133,6 +133,14 @@ final class GameViewModel {
         scoreEvents = []
     }
 
+    /// Mark all unscored players as busted (0 pts) for the current round.
+    func bustUnscoredPlayers() {
+        for gp in gamePlayers {
+            guard currentRoundSelections[gp.id]?.isConfirmed != true else { continue }
+            scorePlayer(id: gp.id, points: 0, isWin: false, isBust: true, selection: RoundSelection())
+        }
+    }
+
     func nextRound() {
         if let winner = gameWinner, confirmedWinner == nil {
             confirmedWinner = winner

@@ -4,8 +4,6 @@ struct ScoreTab: View {
     @Environment(GameViewModel.self) private var vm
     @State private var scoringPlayer: GamePlayer? = nil
     @State private var displayedRound: Int = 0
-    @State private var showRoundComplete: Bool = false
-    @State private var completedRoundNum: Int = 0
     /// Non-nil while editing a past round (0-based index into roundHistory).
     @State private var editingRoundIdx: Int? = nil
 
@@ -67,16 +65,6 @@ struct ScoreTab: View {
                 } else {
                     vm.scorePlayer(id: gp.id, points: points, isWin: isWin, isBust: isBust, selection: selection)
                     scoringPlayer = nil
-                    // Auto-advance to next unscored player, or show round-complete animation then advance
-                    Task { @MainActor in
-                        try? await Task.sleep(for: .milliseconds(350))
-                        if let next = vm.nextUnscoredPlayer() {
-                            scoringPlayer = next
-                        } else {
-                            completedRoundNum = vm.roundNum
-                            showRoundComplete = true
-                        }
-                    }
                 }
             } onSaveDraft: { selection in
                 if editingRoundIdx == nil {
@@ -85,16 +73,6 @@ struct ScoreTab: View {
             }
             .id(gp.id)
         }
-        .overlay {
-            if showRoundComplete {
-                RoundCompleteOverlay(roundNum: completedRoundNum) {
-                    showRoundComplete = false
-                    withAnimation(.flipBounce) { vm.nextRound() }
-                }
-                .transition(.opacity)
-            }
-        }
-        .animation(.easeInOut(duration: 0.2), value: showRoundComplete)
     }
 
     // MARK: - Round tracker header
@@ -149,36 +127,79 @@ struct ScoreTab: View {
 
     // MARK: - Current round page
 
+    private var scoredCount: Int {
+        vm.gamePlayers.filter { vm.currentRoundSelections[$0.id]?.isConfirmed == true }.count
+    }
+
     private var currentRoundPage: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                if let winner = vm.confirmedWinner {
-                    GlassCard {
-                        HStack(spacing: 10) {
-                            Image(systemName: "trophy.fill")
-                                .foregroundStyle(Color(hex: "FFD700"))
-                            Text("\(winner.name) wins! 🎉")
-                                .font(.flipBody())
-                                .foregroundStyle(.white)
-                            Spacer()
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 16) {
+                    if let winner = vm.confirmedWinner {
+                        GlassCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "trophy.fill")
+                                    .foregroundStyle(Color(hex: "FFD700"))
+                                Text("\(winner.name) wins! 🎉")
+                                    .font(.flipBody())
+                                    .foregroundStyle(.white)
+                                Spacer()
+                            }
+                            .padding(14)
                         }
-                        .padding(14)
+                    }
+
+                    ForEach(vm.sortedGamePlayers) { gp in
+                        PlayerScoreCard(
+                            gamePlayer: gp,
+                            target: vm.target,
+                            isScored: vm.currentRoundSelections[gp.id]?.isConfirmed == true
+                        ) {
+                            scoringPlayer = gp
+                        }
                     }
                 }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                .padding(.bottom, 20)
+            }
 
-                ForEach(vm.sortedGamePlayers) { gp in
-                    PlayerScoreCard(
-                        gamePlayer: gp,
-                        target: vm.target,
-                        isScored: vm.currentRoundSelections[gp.id]?.isConfirmed == true
-                    ) {
-                        scoringPlayer = gp
-                    }
+            // ── Next Round button ──────────────────────────────────────
+            if scoredCount > 0 {
+                nextRoundButton
+                    .padding(.horizontal)
+                    .padding(.bottom, 28)
+                    .padding(.top, 8)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.flipBounce, value: scoredCount)
+    }
+
+    // MARK: - Next Round button
+
+    private var nextRoundButton: some View {
+        let unscoredCount = vm.gamePlayers.count - scoredCount
+        return Button {
+            vm.bustUnscoredPlayers()
+            withAnimation(.flipBounce) { vm.nextRound() }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "arrow.right.circle.fill")
+                    .font(.title3)
+                if unscoredCount > 0 {
+                    Text("Next Round (\(unscoredCount) bust)")
+                } else {
+                    Text("Next Round")
                 }
             }
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 20)
+            .font(.flipBody())
+            .foregroundStyle(.black)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(LinearGradient.flipPrimary)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
         }
+        .buttonStyle(.plain)
     }
 }
