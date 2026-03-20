@@ -1,6 +1,6 @@
 /// Tracks a player's card picks (and confirmed result) for the current round.
 /// Persists across sheet open/close until "Next Round!" is tapped.
-struct RoundSelection {
+struct RoundSelection: Codable {
     var selectedRegular: Set<Int> = []
     var selectedModifiers: Set<Int> = []
     var hasDoubler: Bool = false

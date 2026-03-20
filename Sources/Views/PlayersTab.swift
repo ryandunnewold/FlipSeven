@@ -54,7 +54,10 @@ struct PlayersTab: View {
                 .confirmationDialog("End the current game?",
                                     isPresented: $showEndConfirm,
                                     titleVisibility: .visible) {
-                    Button("End Game", role: .destructive) { vm.endGame() }
+                    Button("End Game", role: .destructive) {
+                        Haptics.notification(.warning)
+                        vm.endGame()
+                    }
                     Button("Cancel", role: .cancel) {}
                 }
             }

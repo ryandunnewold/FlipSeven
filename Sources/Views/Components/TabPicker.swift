@@ -46,6 +46,8 @@ struct TabPicker: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(tab.rawValue)
+                .accessibilityAddTraits(selection == tab ? .isSelected : [])
             }
         }
         .padding(4)
@@ -53,5 +55,7 @@ struct TabPicker: View {
             Capsule()
                 .fill(Color.white.opacity(0.15))
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Game tabs")
     }
 }

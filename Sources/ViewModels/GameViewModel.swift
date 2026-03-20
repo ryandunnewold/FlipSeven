@@ -14,6 +14,7 @@ final class GameViewModel {
            let saved = try? JSONDecoder().decode([GameRecord].self, from: data) {
             gameHistory = saved
         }
+        restoreActiveGame()
     }
 
     private func saveRoster() {
@@ -27,6 +28,58 @@ final class GameViewModel {
             UserDefaults.standard.set(data, forKey: historyKey)
         }
     }
+
+    // MARK: - Active game state persistence
+
+    private let activeGameKey = "flip7.activeGame"
+
+    private struct ActiveGameState: Codable {
+        let gamePlayers: [GamePlayer]
+        let roundNum: Int
+        let currentRoundSelections: [UUID: RoundSelection]
+        let roundHistory: [[UUID: RoundSelection]]
+        let scoreEvents: [ScoreEvent]
+    }
+
+    private func saveActiveGame() {
+        guard hasActiveGame else {
+            UserDefaults.standard.removeObject(forKey: activeGameKey)
+            return
+        }
+        let state = ActiveGameState(
+            gamePlayers: gamePlayers,
+            roundNum: roundNum,
+            currentRoundSelections: currentRoundSelections,
+            roundHistory: roundHistory,
+            scoreEvents: scoreEvents
+        )
+        if let data = try? JSONEncoder().encode(state) {
+            UserDefaults.standard.set(data, forKey: activeGameKey)
+        }
+    }
+
+    private func restoreActiveGame() {
+        guard let data = UserDefaults.standard.data(forKey: activeGameKey),
+              let state = try? JSONDecoder().decode(ActiveGameState.self, from: data) else { return }
+        gamePlayers = state.gamePlayers
+        roundNum = state.roundNum
+        currentRoundSelections = state.currentRoundSelections
+        roundHistory = state.roundHistory
+        scoreEvents = state.scoreEvents
+        hasActiveGame = true
+
+        // In winner snapshot mode, auto-trigger confetti without auto-dismiss
+        if ProcessInfo.processInfo.arguments.contains("-SNAPSHOT_WINNER"),
+           let winner = gameWinner {
+            confirmedWinner = winner
+            showConfetti = true
+        }
+    }
+
+    private func clearActiveGame() {
+        UserDefaults.standard.removeObject(forKey: activeGameKey)
+    }
+
     var gamePlayers: [GamePlayer] = []
     var roundNum: Int = 1
     var hasActiveGame: Bool = false
@@ -92,6 +145,8 @@ final class GameViewModel {
         currentRoundSelections = [:]
         roundHistory = []
         scoreEvents = []
+        Haptics.notification(.success)
+        saveActiveGame()
     }
 
     func endGame() {
@@ -131,6 +186,7 @@ final class GameViewModel {
         currentRoundSelections = [:]
         roundHistory = []
         scoreEvents = []
+        clearActiveGame()
     }
 
     /// Mark all unscored players as busted (0 pts) for the current round.
@@ -149,6 +205,7 @@ final class GameViewModel {
         roundHistory.append(currentRoundSelections)
         roundNum += 1
         currentRoundSelections = [:]
+        saveActiveGame()
     }
 
     /// Returns the first game player who has not yet had their score confirmed this round.
@@ -274,12 +331,15 @@ final class GameViewModel {
             isRoundWin: isWin && !isBust,
             isBust: isBust
         ))
+
+        Haptics.notification(isBust ? .warning : (isWin ? .success : .success))
+        saveActiveGame()
     }
 
     private func triggerConfetti() {
         showConfetti = true
         Task {
-            try? await Task.sleep(for: .seconds(4))
+            try? await Task.sleep(for: .seconds(10))
             showConfetti = false
         }
     }

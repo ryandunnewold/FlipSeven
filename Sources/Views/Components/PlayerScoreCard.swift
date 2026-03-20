@@ -78,5 +78,8 @@ struct PlayerScoreCard: View {
             }
         }
         .buttonStyle(.plain)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(gamePlayer.name), \(gamePlayer.score) points, \(gamePlayer.roundWins) wins, \(gamePlayer.busts) busts")
+        .accessibilityHint(isScored ? "Already scored this round. Tap to edit." : "Tap to score this round.")
     }
 }
