@@ -13,16 +13,13 @@
 		1191424411D1ABBC08CB4292 /* RulesTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFA926E18D2229A599BC15F /* RulesTab.swift */; };
 		12ECBA4ADE1B1366F8AFB327 /* FlipSevenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59AC89A4BD83593A5623826E /* FlipSevenApp.swift */; };
 		1B49543A33F79872BB308666 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */; };
-		1BF5833660C72B88F3269894 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6940847F73607161ECDF4A1E /* SnapshotHelper.swift */; };
 		278BB0CD69264CEC98CACC8A /* PlayerScoreCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB65601FB8F504558A38946 /* PlayerScoreCard.swift */; };
 		2A3ADD1B8286DF5CA7CE46CB /* GameRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 791EBBED6C5630DAE3C3C027 /* GameRecord.swift */; };
 		3382C2CEA13C1A745228CA40 /* GamePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989F769326303F267E937EF /* GamePlayer.swift */; };
 		3B7C35080B53A21C022668D5 /* RoundSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0A763E1D97F417269129E1 /* RoundSelection.swift */; };
 		3BFCD7F392163062CE9728C9 /* ScoringSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF7DCEDB90FCE99EA8E03C5D /* ScoringSheet.swift */; };
-		3E0976157D02D98381A28995 /* SnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F5BC94A864C60D9CB5BF7 /* SnapshotTests.swift */; };
 		3E3126243DB4D9599E1A266E /* RecordsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5238DA4B703BE9F82210A4B9 /* RecordsSheet.swift */; };
 		3EFD6AC31A055F4D41377886 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE270C832D94CDF6D625EB3B /* Player.swift */; };
-		4706C029A98E5BAB81C739B0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B29B3E94674E86D12AA7162D /* Assets.xcassets */; };
 		472DED84219EE8AF7B130DCB /* ConfettiOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC953C8E3741E5C20E5313B7 /* ConfettiOverlay.swift */; };
 		640BD5079C83B0D6A7323862 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2986011DDD1F0328586D07E /* ContentView.swift */; };
 		711362C374030542F970CC47 /* ScoreEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3059127F195C59A2AAA1BD80 /* ScoreEvent.swift */; };
@@ -37,47 +34,30 @@
 		BD9665F1B1E9739E23CE9FA4 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */; };
 		C1A84125995A07F07E84719A /* PastRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD2F7F9AE12BBCD263296F /* PastRoundView.swift */; };
 		C5A1F27AB9EE8EE56B641030 /* TabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35990E576030A295B7EEFF8B /* TabPicker.swift */; };
-		E6CC8C14D51C3771EC11B3ED /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326C064C48A65C9B54FC7D9C /* Haptics.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		CEDF40AD2D80CD238B6567A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F1B81131BF217825D092E5C5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5C401F29739321C418E2FF56;
-			remoteInfo = FlipSeven;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		01DC34DFE7B0ED9E499CC7AD /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
 		11C9D1C692A03829DE131006 /* ScoreTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreTab.swift; sourceTree = "<group>"; };
-		121F5BC94A864C60D9CB5BF7 /* SnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTests.swift; sourceTree = "<group>"; };
 		15FA0CB1F051D3B10EBA5F0C /* FlipTypography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipTypography.swift; sourceTree = "<group>"; };
 		16497F4AB51A91119991AA06 /* FlipAnimations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipAnimations.swift; sourceTree = "<group>"; };
 		1989F769326303F267E937EF /* GamePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlayer.swift; sourceTree = "<group>"; };
 		2F2ECCBA0D55857701A14BD1 /* RoundCompleteOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCompleteOverlay.swift; sourceTree = "<group>"; };
 		2FB65601FB8F504558A38946 /* PlayerScoreCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerScoreCard.swift; sourceTree = "<group>"; };
 		3059127F195C59A2AAA1BD80 /* ScoreEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreEvent.swift; sourceTree = "<group>"; };
-		326C064C48A65C9B54FC7D9C /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		35990E576030A295B7EEFF8B /* TabPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPicker.swift; sourceTree = "<group>"; };
 		3889E8F8F7E389BA4A9F7790 /* RoundDotsIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundDotsIndicator.swift; sourceTree = "<group>"; };
 		40E4784F601AB4CFF08E08E3 /* FlipColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipColors.swift; sourceTree = "<group>"; };
 		5238DA4B703BE9F82210A4B9 /* RecordsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordsSheet.swift; sourceTree = "<group>"; };
-		526611A15FFDF52037CBB3F4 /* FlipSevenUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FlipSevenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		59AC89A4BD83593A5623826E /* FlipSevenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlipSevenApp.swift; sourceTree = "<group>"; };
 		5A0A763E1D97F417269129E1 /* RoundSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundSelection.swift; sourceTree = "<group>"; };
 		5BE4F8D014E498DE407FCC1A /* ActivityFeedTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityFeedTab.swift; sourceTree = "<group>"; };
-		6940847F73607161ECDF4A1E /* SnapshotHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		737B8108072A5FDA67C63383 /* PlayersTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersTab.swift; sourceTree = "<group>"; };
 		791EBBED6C5630DAE3C3C027 /* GameRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameRecord.swift; sourceTree = "<group>"; };
-		8B087CCE2B314CD1AFC8F3B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8CBD2F7F9AE12BBCD263296F /* PastRoundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastRoundView.swift; sourceTree = "<group>"; };
 		8DFA926E18D2229A599BC15F /* RulesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesTab.swift; sourceTree = "<group>"; };
 		B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
-		B29B3E94674E86D12AA7162D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		D411E164DEB651CC1C4479EF /* FlipSeven.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FlipSeven.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D411E164DEB651CC1C4479EF /* FlipSeven.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlipSeven.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 		D64C3B385AD6650B9BB2451B /* NewGameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameSheet.swift; sourceTree = "<group>"; };
 		E50DC72374EB3CEA71890CA3 /* PlayerAvatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerAvatar.swift; sourceTree = "<group>"; };
@@ -94,7 +74,6 @@
 				16497F4AB51A91119991AA06 /* FlipAnimations.swift */,
 				40E4784F601AB4CFF08E08E3 /* FlipColors.swift */,
 				15FA0CB1F051D3B10EBA5F0C /* FlipTypography.swift */,
-				326C064C48A65C9B54FC7D9C /* Haptics.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -131,15 +110,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		6889A60EC4BE7C37032B06F7 /* UITests */ = {
-			isa = PBXGroup;
-			children = (
-				6940847F73607161ECDF4A1E /* SnapshotHelper.swift */,
-				121F5BC94A864C60D9CB5BF7 /* SnapshotTests.swift */,
-			);
-			path = UITests;
-			sourceTree = "<group>";
-		};
 		87AFA01FEC7576E6EB1C9763 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -167,7 +137,6 @@
 			isa = PBXGroup;
 			children = (
 				D411E164DEB651CC1C4479EF /* FlipSeven.app */,
-				526611A15FFDF52037CBB3F4 /* FlipSevenUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,20 +161,9 @@
 		D89DF8974387F4B6CF32A4F6 = {
 			isa = PBXGroup;
 			children = (
-				E6D193DC8C342280A1838FE9 /* Resources */,
 				2D1671BA3A508FBAF4C1506E /* Sources */,
-				6889A60EC4BE7C37032B06F7 /* UITests */,
 				C64E5E261E1E7E6269E5B1FA /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		E6D193DC8C342280A1838FE9 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B29B3E94674E86D12AA7162D /* Assets.xcassets */,
-				8B087CCE2B314CD1AFC8F3B3 /* Info.plist */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -216,7 +174,6 @@
 			buildConfigurationList = 3A0E49BF9F69E8A6F8AE22A3 /* Build configuration list for PBXNativeTarget "FlipSeven" */;
 			buildPhases = (
 				3D967A6037CA4B412299956C /* Sources */,
-				2F78582B28E5B407587F3E32 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -229,24 +186,6 @@
 			productReference = D411E164DEB651CC1C4479EF /* FlipSeven.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E8E52A810E3C3762E91712E5 /* FlipSevenUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 86BD36A50564BF113D4D237C /* Build configuration list for PBXNativeTarget "FlipSevenUITests" */;
-			buildPhases = (
-				EE5B190E1F14AB3C74C5E2E3 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				446E61736A8D19CB5AD0C696 /* PBXTargetDependency */,
-			);
-			name = FlipSevenUITests;
-			packageProductDependencies = (
-			);
-			productName = FlipSevenUITests;
-			productReference = 526611A15FFDF52037CBB3F4 /* FlipSevenUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -255,17 +194,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1540;
-				TargetAttributes = {
-					5C401F29739321C418E2FF56 = {
-						DevelopmentTeam = 5R2UKT4F8J;
-						ProvisioningStyle = Automatic;
-					};
-					E8E52A810E3C3762E91712E5 = {
-						DevelopmentTeam = 5R2UKT4F8J;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 5C401F29739321C418E2FF56;
-					};
-				};
 			};
 			buildConfigurationList = BABD13A675533FAE93EB154D /* Build configuration list for PBXProject "FlipSeven" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -281,21 +209,9 @@
 			projectRoot = "";
 			targets = (
 				5C401F29739321C418E2FF56 /* FlipSeven */,
-				E8E52A810E3C3762E91712E5 /* FlipSevenUITests */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		2F78582B28E5B407587F3E32 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4706C029A98E5BAB81C739B0 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		3D967A6037CA4B412299956C /* Sources */ = {
@@ -314,7 +230,6 @@
 				2A3ADD1B8286DF5CA7CE46CB /* GameRecord.swift in Sources */,
 				1B49543A33F79872BB308666 /* GameViewModel.swift in Sources */,
 				1094F2680A28BDDD765C643C /* GlassCard.swift in Sources */,
-				E6CC8C14D51C3771EC11B3ED /* Haptics.swift in Sources */,
 				071B71A68568EF70862751DF /* NewGameSheet.swift in Sources */,
 				C1A84125995A07F07E84719A /* PastRoundView.swift in Sources */,
 				3EFD6AC31A055F4D41377886 /* Player.swift in Sources */,
@@ -333,24 +248,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EE5B190E1F14AB3C74C5E2E3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1BF5833660C72B88F3269894 /* SnapshotHelper.swift in Sources */,
-				3E0976157D02D98381A28995 /* SnapshotTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		446E61736A8D19CB5AD0C696 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5C401F29739321C418E2FF56 /* FlipSeven */;
-			targetProxy = CEDF40AD2D80CD238B6567A7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		437E6799245EE7552B2B5E49 /* Debug */ = {
@@ -358,7 +256,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -389,7 +286,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -410,7 +306,6 @@
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -421,25 +316,6 @@
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VERSIONING_SYSTEM = "apple-generic";
-			};
-			name = Debug;
-		};
-		698CF48198594612FDABA741 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5R2UKT4F8J;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dunnewold.FlipSeven.UITests;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = FlipSeven;
 			};
 			name = Debug;
 		};
@@ -448,34 +324,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5R2UKT4F8J;
-				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dunnewold.FlipSeven;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		BEE19A2977BBD41803D73F3A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5R2UKT4F8J;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dunnewold.FlipSeven.UITests;
-				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = FlipSeven;
 			};
 			name = Release;
 		};
@@ -484,16 +340,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 5R2UKT4F8J;
-				INFOPLIST_FILE = Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.dunnewold.FlipSeven;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -502,7 +356,6 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -533,7 +386,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -548,7 +400,6 @@
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -558,7 +409,6 @@
 				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -570,15 +420,6 @@
 			buildConfigurations = (
 				DBA694D3C2DC830F3FC374DB /* Debug */,
 				9D2FBA83F8A662E9DD6034FE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		86BD36A50564BF113D4D237C /* Build configuration list for PBXNativeTarget "FlipSevenUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				698CF48198594612FDABA741 /* Debug */,
-				BEE19A2977BBD41803D73F3A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
