@@ -67,6 +67,7 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 48)
+            .accessibilityLabel("Start a new game")
 
             Button {
                 showRecordsSheet = true
@@ -79,6 +80,7 @@ struct ContentView: View {
                 .foregroundStyle(.white.opacity(0.5))
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("View player records and game history")
 
             Spacer()
         }
