@@ -4,6 +4,8 @@ struct ScoreTab: View {
     @Environment(GameViewModel.self) private var vm
     @State private var scoringPlayer: GamePlayer? = nil
     @State private var displayedRound: Int = 0
+    @State private var showRoundComplete: Bool = false
+    @State private var completedRoundNum: Int = 0
     /// Non-nil while editing a past round (0-based index into roundHistory).
     @State private var editingRoundIdx: Int? = nil
 
@@ -73,6 +75,16 @@ struct ScoreTab: View {
             }
             .id(gp.id)
         }
+        .overlay {
+            if showRoundComplete {
+                RoundCompleteOverlay(roundNum: completedRoundNum) {
+                    showRoundComplete = false
+                    withAnimation(.flipBounce) { vm.nextRound() }
+                }
+                .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: showRoundComplete)
     }
 
     // MARK: - Round tracker header
@@ -182,7 +194,8 @@ struct ScoreTab: View {
         let unscoredCount = vm.gamePlayers.count - scoredCount
         return Button {
             vm.bustUnscoredPlayers()
-            withAnimation(.flipBounce) { vm.nextRound() }
+            completedRoundNum = vm.roundNum
+            showRoundComplete = true
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "arrow.right.circle.fill")
