@@ -1,0 +1,10 @@
+Flip Seven is a fast-paced card game score tracker for game nights with friends. Keep score round by round as players race to 200 points.
+
+Features:
+- Track scores for 2+ players across multiple rounds
+- See live standings, round history, and activity feed
+- Built-in rules reference so everyone stays on the same page
+- Lifetime player stats and game history
+- Celebratory confetti when someone wins
+
+Simple, beautiful, and built for the table.
