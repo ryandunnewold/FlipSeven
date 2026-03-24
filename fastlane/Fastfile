@@ -25,6 +25,15 @@ platform :ios do
     )
   end
 
+  desc "Upload existing IPA to TestFlight"
+  lane :upload do
+    upload_to_testflight(
+      api_key: API_KEY,
+      ipa: "FlipSeven.ipa",
+      skip_waiting_for_build_processing: true
+    )
+  end
+
   desc "Upload screenshots to App Store Connect"
   lane :upload_screenshots do
     upload_to_app_store(
@@ -48,6 +57,108 @@ platform :ios do
       api_key: API_KEY,
       force: true,
       submit_for_review: false
+    )
+  end
+
+  desc "Set up App Store version metadata via API (copyright, categories, review contact)"
+  lane :setup_metadata do
+    require 'spaceship'
+
+    token = Spaceship::ConnectAPI::Token.from(hash: API_KEY)
+    Spaceship::ConnectAPI.token = token
+
+    app = Spaceship::ConnectAPI::App.find("com.dunnewold.FlipSeven")
+    UI.user_error!("App not found") unless app
+
+    # Set content rights declaration
+    app.update(attributes: {
+      primaryLocale: "en-US",
+      contentRightsDeclaration: "DOES_NOT_USE_THIRD_PARTY_CONTENT"
+    })
+    UI.success("Updated app attributes")
+
+    # Get the editable App Store version
+    version = app.get_edit_app_store_version
+    UI.user_error!("No editable version found") unless version
+
+    # Update version with copyright
+    version.update(attributes: {
+      copyright: "2026 Dunnewold Labs"
+    })
+    UI.success("Set copyright on version #{version.version_string}")
+
+    # Set categories
+    app_info = app.fetch_edit_app_info
+    UI.user_error!("No editable app info found") unless app_info
+
+    Spaceship::ConnectAPI.patch_app_info_categories(
+      app_info_id: app_info.id,
+      category_id_map: {
+        primary_category_id: "GAMES",
+        secondary_category_id: "ENTERTAINMENT"
+      }
+    )
+    UI.success("Set categories")
+
+    # Create review detail (contact info for Apple reviewers)
+    begin
+      review_detail = version.fetch_app_store_review_detail
+      UI.success("Review detail already exists")
+    rescue => e
+      UI.message("Creating review detail...")
+      Spaceship::ConnectAPI.post_app_store_review_detail(
+        app_store_version_id: version.id,
+        attributes: {
+          contactEmail: "rmdunnewold@gmail.com",
+          contactFirstName: "Ryan",
+          contactLastName: "Dunnewold",
+          contactPhone: "+1 2025551234"
+        }
+      )
+      UI.success("Created review detail")
+    end
+  end
+
+  desc "Upload metadata to App Store Connect"
+  lane :upload_metadata do
+    upload_to_app_store(
+      api_key: API_KEY,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_app_version_update: true,
+      force: true,
+      precheck_include_in_app_purchases: false
+    )
+  end
+
+  desc "Upload metadata to App Store Connect (creates version if needed)"
+  lane :deliver do
+    upload_to_app_store(
+      api_key: API_KEY,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      app_version: "1.1.0"
+    )
+  end
+
+  desc "Submit the latest build for App Store review"
+  lane :submit do
+    upload_to_app_store(
+      api_key: API_KEY,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      force: true,
+      submit_for_review: true,
+      automatic_release: true,
+      precheck_include_in_app_purchases: false,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false,
+        content_rights_contains_third_party_content: false
+      }
     )
   end
 end

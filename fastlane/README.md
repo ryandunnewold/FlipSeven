@@ -31,6 +31,14 @@ Capture App Store screenshots
 
 Build and upload to TestFlight
 
+### ios upload
+
+```sh
+[bundle exec] fastlane ios upload
+```
+
+Upload existing IPA to TestFlight
+
 ### ios upload_screenshots
 
 ```sh
@@ -46,6 +54,38 @@ Upload screenshots to App Store Connect
 ```
 
 Full App Store release: screenshots, build, and upload
+
+### ios setup_metadata
+
+```sh
+[bundle exec] fastlane ios setup_metadata
+```
+
+Set up App Store version metadata via API (copyright, categories, review contact)
+
+### ios upload_metadata
+
+```sh
+[bundle exec] fastlane ios upload_metadata
+```
+
+Upload metadata to App Store Connect
+
+### ios deliver
+
+```sh
+[bundle exec] fastlane ios deliver
+```
+
+Upload metadata to App Store Connect (creates version if needed)
+
+### ios submit
+
+```sh
+[bundle exec] fastlane ios submit
+```
+
+Submit the latest build for App Store review
 
 ----
 
