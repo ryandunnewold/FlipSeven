@@ -38,3 +38,22 @@ final class SnapshotTests: XCTestCase {
         snapshot("05_NewGame")
     }
 }
+
+@MainActor
+final class WinnerSnapshotTests: XCTestCase {
+    let app = XCUIApplication()
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        app.launchArguments = ["-SNAPSHOT_WINNER"]
+        setupSnapshot(app)
+        app.launch()
+    }
+
+    func testWinnerScreen() {
+        // Wait for confetti overlay to appear
+        let winnerText = app.staticTexts["WINNER!"]
+        XCTAssertTrue(winnerText.waitForExistence(timeout: 3))
+        snapshot("06_Winner")
+    }
+}

@@ -67,6 +67,13 @@ final class GameViewModel {
         roundHistory = state.roundHistory
         scoreEvents = state.scoreEvents
         hasActiveGame = true
+
+        // In winner snapshot mode, auto-trigger confetti without auto-dismiss
+        if ProcessInfo.processInfo.arguments.contains("-SNAPSHOT_WINNER"),
+           let winner = gameWinner {
+            confirmedWinner = winner
+            showConfetti = true
+        }
     }
 
     private func clearActiveGame() {
@@ -180,6 +187,14 @@ final class GameViewModel {
         roundHistory = []
         scoreEvents = []
         clearActiveGame()
+    }
+
+    /// Mark all unscored players as busted (0 pts) for the current round.
+    func bustUnscoredPlayers() {
+        for gp in gamePlayers {
+            guard currentRoundSelections[gp.id]?.isConfirmed != true else { continue }
+            scorePlayer(id: gp.id, points: 0, isWin: false, isBust: true, selection: RoundSelection())
+        }
     }
 
     func nextRound() {
@@ -324,7 +339,7 @@ final class GameViewModel {
     private func triggerConfetti() {
         showConfetti = true
         Task {
-            try? await Task.sleep(for: .seconds(4))
+            try? await Task.sleep(for: .seconds(10))
             showConfetti = false
         }
     }
