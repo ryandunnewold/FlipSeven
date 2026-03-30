@@ -174,7 +174,11 @@ final class GameViewModel {
         for gp in gamePlayers {
             guard let idx = roster.firstIndex(where: { $0.id == gp.id }) else { continue }
             roster[idx].gamesPlayed += 1
-            if gp.id == winnerId { roster[idx].gamesWon += 1 }
+            if gp.id == winnerId {
+                roster[idx].gamesWon += 1
+            } else {
+                roster[idx].gamesLost += 1
+            }
             roster[idx].totalRoundWins += gp.roundWins
             roster[idx].totalBusts += gp.busts
         }

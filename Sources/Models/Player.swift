@@ -9,6 +9,7 @@ struct Player: Identifiable, Codable {
     // Lifetime records — accumulated across all completed games
     var gamesPlayed: Int = 0
     var gamesWon: Int = 0
+    var gamesLost: Int = 0
     var totalRoundWins: Int = 0
     var totalBusts: Int = 0
 

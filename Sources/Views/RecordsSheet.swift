@@ -79,6 +79,7 @@ struct RecordsSheet: View {
                 Spacer()
                 statHeader("GP")
                 statHeader("W")
+                statHeader("L")
                 statHeader("RW")
                 statHeader("B")
             }
@@ -204,6 +205,7 @@ struct RecordsSheet: View {
 
                 statCell("\(player.gamesPlayed)", color: .white.opacity(0.6))
                 statCell("\(player.gamesWon)",    color: Color(hex: "FFD700"))
+                statCell("\(player.gamesLost)",   color: .white.opacity(0.45))
                 statCell("\(player.totalRoundWins)", color: Color.flipPink)
                 statCell("\(player.totalBusts)",  color: .red.opacity(0.75))
             }
