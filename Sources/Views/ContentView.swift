@@ -5,6 +5,9 @@ struct ContentView: View {
     @State private var selectedTab: Tab = .score
     @State private var showNewGameSheet: Bool = false
     @State private var showRecordsSheet: Bool = false
+    @Environment(\.openURL) private var openURL
+
+    private let feedbackURL = URL(string: "https://mr-manager-gold.vercel.app/feedback/cmm1a6467000004l1rypht0hj")!
 
     var body: some View {
         ZStack {
@@ -83,6 +86,20 @@ struct ContentView: View {
             .accessibilityLabel("View player records and game history")
 
             Spacer()
+
+            Button {
+                openURL(feedbackURL)
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "bubble.left.fill")
+                        .font(.system(size: 11))
+                    Text("Send Feedback")
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                }
+                .foregroundStyle(.white.opacity(0.35))
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 20)
         }
     }
 
@@ -93,6 +110,13 @@ struct ContentView: View {
                     .font(.flipTitle())
                     .foregroundStyle(LinearGradient.flipTitle)
                 Spacer()
+                Button {
+                    openURL(feedbackURL)
+                } label: {
+                    Image(systemName: "bubble.left")
+                        .font(.title3)
+                        .foregroundStyle(.white.opacity(0.5))
+                }
                 Button {
                     showNewGameSheet = true
                 } label: {
