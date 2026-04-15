@@ -131,6 +131,14 @@ final class GameViewModel {
         saveRoster()
     }
 
+    func updatePlayerName(id: UUID, name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty,
+              let idx = roster.firstIndex(where: { $0.id == id }) else { return }
+        roster[idx].name = trimmed
+        saveRoster()
+    }
+
     // MARK: - Game lifecycle
 
     func startGame(with playerIds: [UUID]) {

@@ -17,24 +17,23 @@ final class SnapshotTests: XCTestCase {
         snapshot("01_Score")
     }
 
-    func testPlayersTab() {
-        app.buttons["Players"].tap()
-        snapshot("02_Players")
-    }
-
-    func testFeedTab() {
-        app.buttons["Feed"].tap()
-        snapshot("03_Feed")
+    func testHistoryTab() {
+        app.buttons["History"].tap()
+        snapshot("02_History")
     }
 
     func testRulesTab() {
         app.buttons["Rules"].tap()
-        snapshot("04_Rules")
+        snapshot("03_Rules")
+    }
+
+    func testSettingsTab() {
+        app.buttons["Settings"].tap()
+        snapshot("04_Settings")
     }
 
     func testNewGameSheet() {
-        // Tap the "+" button in the game header
-        app.buttons["plus.circle"].tap()
+        app.buttons["New Game"].tap()
         snapshot("05_NewGame")
     }
 }

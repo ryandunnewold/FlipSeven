@@ -38,6 +38,15 @@ struct ContentView: View {
             RecordsSheet()
                 .environment(vm)
         }
+        .onChange(of: selectedTab) { oldTab, newTab in
+            switch newTab {
+            case .newGame:
+                showNewGameSheet = true
+                selectedTab = oldTab
+            default:
+                break
+            }
+        }
     }
 
     private var lobbyView: some View {
@@ -45,7 +54,7 @@ struct ContentView: View {
             Spacer()
 
             VStack(spacing: 10) {
-                Text("FLIP SEVEN")
+                Text("FLIPPY KEEP SCORE")
                     .font(.flipTitle())
                     .foregroundStyle(LinearGradient.flipTitle)
                 Text("First to 200 wins")
@@ -105,47 +114,33 @@ struct ContentView: View {
 
     private var gameView: some View {
         VStack(spacing: 0) {
-            HStack {
-                Text("FLIP SEVEN")
-                    .font(.flipTitle())
-                    .foregroundStyle(LinearGradient.flipTitle)
-                Spacer()
-                Button {
-                    openURL(feedbackURL)
-                } label: {
-                    Image(systemName: "bubble.left")
-                        .font(.title3)
-                        .foregroundStyle(.white.opacity(0.5))
-                }
-                Button {
-                    showNewGameSheet = true
-                } label: {
-                    Image(systemName: "plus.circle")
-                        .font(.title3)
-                        .foregroundStyle(.white.opacity(0.7))
-                }
-            }
-            .padding(.horizontal, 20)
-            .padding(.top, 16)
-            .padding(.bottom, 12)
-
-            TabPicker(selection: $selectedTab)
+            Text("FLIPPY KEEP SCORE")
+                .font(.flipTitle())
+                .foregroundStyle(LinearGradient.flipTitle)
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, 20)
-                .padding(.bottom, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 12)
 
             Group {
                 switch selectedTab {
                 case .score:
                     ScoreTab()
-                case .players:
-                    PlayersTab()
-                case .feed:
+                case .history:
                     ActivityFeedTab()
                 case .rules:
                     RulesTab()
+                case .settings:
+                    SettingsTab()
+                case .newGame:
+                    EmptyView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            TabPicker(selection: $selectedTab)
+                .padding(.horizontal, 12)
+                .padding(.bottom, 8)
         }
     }
 }
