@@ -19,7 +19,7 @@ struct ConfettiOverlay: View {
 
     private let colors: [Color] = [
         .flipPink, .flipPurple, .flipBlue, .flipGreen,
-        Color(hex: "FFD700"), Color(hex: "FF6B35")
+        Color(hex: "FFD700"), Color(hex: "FF8A5C"), Color(hex: "C084FC")
     ]
 
     var body: some View {

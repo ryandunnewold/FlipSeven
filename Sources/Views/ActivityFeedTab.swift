@@ -3,25 +3,14 @@ import SwiftUI
 struct ActivityFeedTab: View {
     @Environment(GameViewModel.self) private var vm
 
-    /// Events grouped by round, newest round first.
-    private var groupedEvents: [(round: Int, events: [ScoreEvent])] {
-        let rounds = Set(vm.scoreEvents.map { $0.round }).sorted(by: >)
-        return rounds.map { round in
-            let events = vm.scoreEvents
-                .filter { $0.round == round }
-                .sorted { $0.date > $1.date }
-            return (round: round, events: events)
-        }
-    }
-
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                if vm.scoreEvents.isEmpty {
+            VStack(spacing: 12) {
+                if vm.gameHistory.isEmpty {
                     emptyState
                 } else {
-                    ForEach(groupedEvents, id: \.round) { group in
-                        roundSection(round: group.round, events: group.events)
+                    ForEach(vm.gameHistory) { record in
+                        gameRecordRow(record)
                     }
                 }
             }
@@ -31,18 +20,16 @@ struct ActivityFeedTab: View {
         }
     }
 
-    // MARK: - Sections
-
     @ViewBuilder
     private var emptyState: some View {
         VStack(spacing: 12) {
-            Image(systemName: "list.bullet.rectangle.portrait")
+            Image(systemName: "clock.arrow.circlepath")
                 .font(.system(size: 44))
                 .foregroundStyle(.white.opacity(0.2))
-            Text("No scores yet")
+            Text("No games yet")
                 .font(.flipBody())
                 .foregroundStyle(.white.opacity(0.4))
-            Text("Scores will appear here as the game progresses.")
+            Text("Completed games will appear here.")
                 .font(.flipCaption())
                 .foregroundStyle(.white.opacity(0.3))
                 .multilineTextAlignment(.center)
@@ -51,71 +38,49 @@ struct ActivityFeedTab: View {
     }
 
     @ViewBuilder
-    private func roundSection(round: Int, events: [ScoreEvent]) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Section header
-            HStack {
-                Text("ROUND \(round)")
-                    .font(.system(size: 11, weight: .semibold, design: .rounded))
-                    .foregroundStyle(.white.opacity(0.4))
-                    .tracking(1.8)
-                if round == vm.roundNum {
-                    Text("CURRENT")
-                        .font(.system(size: 10, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(LinearGradient.flipPrimary)
-                        .clipShape(Capsule())
+    private func gameRecordRow(_ record: GameRecord) -> some View {
+        GlassCard {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Text(record.date, style: .date)
+                        .font(.flipCaption())
+                        .foregroundStyle(.white.opacity(0.5))
+                    Spacer()
+                    Text("\(record.roundsPlayed) rounds")
+                        .font(.flipCaption())
+                        .foregroundStyle(.white.opacity(0.4))
                 }
-                Spacer()
-            }
 
-            ForEach(events) { event in
-                eventRow(event)
+                ForEach(record.players) { player in
+                    playerResultRow(player)
+                }
             }
+            .padding(14)
         }
     }
 
     @ViewBuilder
-    private func eventRow(_ event: ScoreEvent) -> some View {
-        let color = Player.themeColors[event.playerColorIndex % Player.themeColors.count]
+    private func playerResultRow(_ player: GameRecord.PlayerSnapshot) -> some View {
+        let color = Player.themeColors[player.colorIndex % Player.themeColors.count]
 
-        GlassCard {
-            HStack(spacing: 12) {
-                PlayerAvatar(emoji: event.playerEmoji, color: color, size: 36)
+        HStack(spacing: 10) {
+            PlayerAvatar(emoji: player.emoji, color: color, size: 32)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(event.playerName)
-                        .font(.flipBody())
-                        .foregroundStyle(.white)
+            Text(player.name)
+                .font(.flipBody())
+                .foregroundStyle(.white)
 
-                    if event.isRoundWin {
-                        HStack(spacing: 4) {
-                            Image(systemName: "trophy.fill")
-                                .font(.system(size: 10))
-                                .foregroundStyle(Color(hex: "FFD700"))
-                            Text("Round winner")
-                                .font(.flipCaption())
-                                .foregroundStyle(.white.opacity(0.55))
-                        }
-                    }
-                }
-
-                Spacer()
-
-                if event.isBust {
-                    Text("BUST 💥")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(.red.opacity(0.85))
-                } else {
-                    Text("+\(event.points)")
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(color)
-                }
+            if player.isWinner {
+                Image(systemName: "trophy.fill")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color(hex: "FFD700"))
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 10)
+
+            Spacer()
+
+            Text("\(player.finalScore)")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(player.isWinner ? Color(hex: "FFD700") : .white.opacity(0.7))
         }
     }
 }
