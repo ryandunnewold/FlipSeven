@@ -1,4 +1,4 @@
-Flip Seven is a fast-paced card game score tracker for game nights with friends. Keep score round by round as players race to 200 points.
+Flippy Scorekeeper is a fast-paced card game score tracker for game nights with friends. Keep score round by round as players race to 200 points.
 
 Features:
 - Track scores for 2+ players across multiple rounds
