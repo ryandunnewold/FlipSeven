@@ -39,6 +39,47 @@ final class GameViewModel {
         let currentRoundSelections: [UUID: RoundSelection]
         let roundHistory: [[UUID: RoundSelection]]
         let scoreEvents: [ScoreEvent]
+        // New fields — defaulted on decode for backward compatibility.
+        let variant: GameVariant?
+        let suddenDeathParticipants: [UUID]?
+        let suddenDeathRoundsPlayed: Int?
+
+        enum CodingKeys: String, CodingKey {
+            case gamePlayers, roundNum, currentRoundSelections, roundHistory, scoreEvents
+            case variant, suddenDeathParticipants, suddenDeathRoundsPlayed
+        }
+
+        init(
+            gamePlayers: [GamePlayer],
+            roundNum: Int,
+            currentRoundSelections: [UUID: RoundSelection],
+            roundHistory: [[UUID: RoundSelection]],
+            scoreEvents: [ScoreEvent],
+            variant: GameVariant,
+            suddenDeathParticipants: [UUID]?,
+            suddenDeathRoundsPlayed: Int
+        ) {
+            self.gamePlayers = gamePlayers
+            self.roundNum = roundNum
+            self.currentRoundSelections = currentRoundSelections
+            self.roundHistory = roundHistory
+            self.scoreEvents = scoreEvents
+            self.variant = variant
+            self.suddenDeathParticipants = suddenDeathParticipants
+            self.suddenDeathRoundsPlayed = suddenDeathRoundsPlayed
+        }
+
+        init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            gamePlayers = try c.decode([GamePlayer].self, forKey: .gamePlayers)
+            roundNum = try c.decode(Int.self, forKey: .roundNum)
+            currentRoundSelections = try c.decode([UUID: RoundSelection].self, forKey: .currentRoundSelections)
+            roundHistory = try c.decode([[UUID: RoundSelection]].self, forKey: .roundHistory)
+            scoreEvents = try c.decode([ScoreEvent].self, forKey: .scoreEvents)
+            variant = try c.decodeIfPresent(GameVariant.self, forKey: .variant)
+            suddenDeathParticipants = try c.decodeIfPresent([UUID].self, forKey: .suddenDeathParticipants)
+            suddenDeathRoundsPlayed = try c.decodeIfPresent(Int.self, forKey: .suddenDeathRoundsPlayed)
+        }
     }
 
     private func saveActiveGame() {
@@ -51,7 +92,10 @@ final class GameViewModel {
             roundNum: roundNum,
             currentRoundSelections: currentRoundSelections,
             roundHistory: roundHistory,
-            scoreEvents: scoreEvents
+            scoreEvents: scoreEvents,
+            variant: variant,
+            suddenDeathParticipants: suddenDeathParticipants,
+            suddenDeathRoundsPlayed: suddenDeathRoundsPlayed
         )
         if let data = try? JSONEncoder().encode(state) {
             UserDefaults.standard.set(data, forKey: activeGameKey)
@@ -66,6 +110,9 @@ final class GameViewModel {
         currentRoundSelections = state.currentRoundSelections
         roundHistory = state.roundHistory
         scoreEvents = state.scoreEvents
+        variant = state.variant ?? .standard
+        suddenDeathParticipants = state.suddenDeathParticipants
+        suddenDeathRoundsPlayed = state.suddenDeathRoundsPlayed ?? 0
         hasActiveGame = true
 
         // In winner snapshot mode, auto-trigger confetti without auto-dismiss
@@ -87,6 +134,17 @@ final class GameViewModel {
     var confirmedWinner: GamePlayer? = nil
     let target: Int = 200
 
+    /// Which edition of Flip 7 is being scored. Set at game start and read-only
+    /// for the duration of that game.
+    var variant: GameVariant = .standard
+
+    /// When non-nil, the game is in a sudden-death tiebreaker round and only
+    /// these player ids are active for the round.
+    var suddenDeathParticipants: [UUID]? = nil
+
+    /// How many sudden-death rounds the game has played so far. 0 in a normal game.
+    var suddenDeathRoundsPlayed: Int = 0
+
     /// Card picks (and confirmed result) for each player in the current round.
     /// Persists until nextRound() is called.
     var currentRoundSelections: [UUID: RoundSelection] = [:]
@@ -106,8 +164,39 @@ final class GameViewModel {
         gamePlayers.sorted { $0.score > $1.score }
     }
 
+    /// Active player IDs for the current round — everyone unless sudden-death
+    /// is narrowing play to a tied subset.
+    var activePlayerIds: Set<UUID> {
+        if let ids = suddenDeathParticipants { return Set(ids) }
+        return Set(gamePlayers.map(\.id))
+    }
+
+    var isSuddenDeath: Bool { suddenDeathParticipants != nil }
+
+    /// Players currently at or above the target.
+    private var qualifyingPlayers: [GamePlayer] {
+        gamePlayers.filter { $0.score >= target }
+    }
+
+    /// Players tied for the highest qualifying score (≥ target). Empty if no
+    /// tie or no qualifiers.
+    private var tiedLeaders: [GamePlayer] {
+        let qualifiers = qualifyingPlayers
+        guard !qualifiers.isEmpty else { return [] }
+        let maxScore = qualifiers.map(\.score).max()!
+        let leaders = qualifiers.filter { $0.score == maxScore }
+        return leaders.count >= 2 ? leaders : []
+    }
+
+    /// The player who has won the game outright, or `nil` if no unique winner
+    /// exists yet. Returns the highest-scoring player at or above the target;
+    /// ties resolve to `nil` so the game can enter sudden-death instead.
     var gameWinner: GamePlayer? {
-        gamePlayers.first { $0.score >= target }
+        let qualifiers = qualifyingPlayers
+        guard !qualifiers.isEmpty else { return nil }
+        let maxScore = qualifiers.map(\.score).max()!
+        let leaders = qualifiers.filter { $0.score == maxScore }
+        return leaders.count == 1 ? leaders.first : nil
     }
 
     // MARK: - Roster
@@ -141,7 +230,7 @@ final class GameViewModel {
 
     // MARK: - Game lifecycle
 
-    func startGame(with playerIds: [UUID]) {
+    func startGame(with playerIds: [UUID], variant: GameVariant = .standard) {
         guard !playerIds.isEmpty else { return }
         gamePlayers = playerIds.compactMap { id in
             roster.first { $0.id == id }.map { GamePlayer(player: $0) }
@@ -153,12 +242,15 @@ final class GameViewModel {
         currentRoundSelections = [:]
         roundHistory = []
         scoreEvents = []
+        self.variant = variant
+        suddenDeathParticipants = nil
+        suddenDeathRoundsPlayed = 0
         Haptics.notification(.success)
         saveActiveGame()
     }
 
     func endGame() {
-        let winnerId = gameWinner?.id
+        let winnerId = confirmedWinner?.id ?? gameWinner?.id
 
         // Save a game record to history
         let snapshots = gamePlayers.map { gp in
@@ -174,7 +266,13 @@ final class GameViewModel {
             )
         }.sorted { $0.finalScore > $1.finalScore }
 
-        let record = GameRecord(roundsPlayed: roundNum, players: snapshots, events: scoreEvents)
+        let record = GameRecord(
+            roundsPlayed: roundNum,
+            players: snapshots,
+            events: scoreEvents,
+            variant: variant,
+            suddenDeathRounds: suddenDeathRoundsPlayed
+        )
         gameHistory.insert(record, at: 0)
         saveHistory()
 
@@ -198,35 +296,79 @@ final class GameViewModel {
         currentRoundSelections = [:]
         roundHistory = []
         scoreEvents = []
+        variant = .standard
+        suddenDeathParticipants = nil
+        suddenDeathRoundsPlayed = 0
         clearActiveGame()
     }
 
-    /// Mark all unscored players as busted (0 pts) for the current round.
+    /// Mark all unscored *active* players as busted (0 pts) for the current
+    /// round. During sudden-death, only participants are auto-busted; players
+    /// not participating in the tiebreaker are skipped.
     func bustUnscoredPlayers() {
+        let active = activePlayerIds
         for gp in gamePlayers {
+            guard active.contains(gp.id) else { continue }
             guard currentRoundSelections[gp.id]?.isConfirmed != true else { continue }
             scorePlayer(id: gp.id, points: 0, isWin: false, isBust: true, selection: RoundSelection())
         }
     }
 
     func nextRound() {
-        if let winner = gameWinner, confirmedWinner == nil {
-            confirmedWinner = winner
-            triggerConfetti()
+        if let participants = suddenDeathParticipants {
+            // Resolve sudden-death: highest single-round applied points wins.
+            // If still tied, narrow participants and play another round.
+            let roundPoints: [(id: UUID, pts: Int)] = participants.map { id in
+                let sel = currentRoundSelections[id]
+                let pts = (sel?.appliedBust == true) ? 0 : (sel?.appliedPoints ?? 0)
+                return (id, pts)
+            }
+            let maxPts = roundPoints.map(\.pts).max() ?? 0
+            let leaders = roundPoints.filter { $0.pts == maxPts }.map(\.id)
+            if leaders.count == 1, let winnerId = leaders.first,
+               let winner = gamePlayers.first(where: { $0.id == winnerId }) {
+                confirmedWinner = winner
+                suddenDeathParticipants = nil
+                triggerConfetti()
+            } else {
+                // Still tied → another sudden-death round among the still-tied subset.
+                suddenDeathParticipants = leaders
+                suddenDeathRoundsPlayed += 1
+            }
+        } else if confirmedWinner == nil {
+            // Normal round resolution. Only act once every active player in the
+            // round has confirmed/busted — Next Round drives that via
+            // bustUnscoredPlayers, so allPlayersScored is effectively true here.
+            if let winner = gameWinner {
+                confirmedWinner = winner
+                triggerConfetti()
+            } else {
+                let tied = tiedLeaders
+                if tied.count >= 2 {
+                    suddenDeathParticipants = tied.map(\.id)
+                    suddenDeathRoundsPlayed = 1
+                }
+            }
         }
+
         roundHistory.append(currentRoundSelections)
         roundNum += 1
         currentRoundSelections = [:]
         saveActiveGame()
     }
 
-    /// Returns the first game player who has not yet had their score confirmed this round.
+    /// Returns the first active game player who has not yet had their score
+    /// confirmed this round.
     func nextUnscoredPlayer() -> GamePlayer? {
-        gamePlayers.first { currentRoundSelections[$0.id]?.isConfirmed != true }
+        let active = activePlayerIds
+        return gamePlayers.first { active.contains($0.id) && currentRoundSelections[$0.id]?.isConfirmed != true }
     }
 
     var allPlayersScored: Bool {
-        gamePlayers.allSatisfy { currentRoundSelections[$0.id]?.isConfirmed == true }
+        let active = activePlayerIds
+        return gamePlayers
+            .filter { active.contains($0.id) }
+            .allSatisfy { currentRoundSelections[$0.id]?.isConfirmed == true }
     }
 
     /// Save card picks without applying a score (sheet dismissed without confirming).

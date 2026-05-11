@@ -51,6 +51,8 @@ struct ScoreTab: View {
                 ?? vm.currentRoundSelections[gp.id]
             ScoringSheet(
                 gamePlayer: gp,
+                variantDefinition: vm.variant.definition,
+                isSuddenDeath: vm.isSuddenDeath && vm.activePlayerIds.contains(gp.id),
                 initialSelection: initialSelection
             ) { points, isWin, isBust, selection in
                 if let roundIdx {
@@ -140,7 +142,10 @@ struct ScoreTab: View {
     // MARK: - Current round page
 
     private var scoredCount: Int {
-        vm.gamePlayers.filter { vm.currentRoundSelections[$0.id]?.isConfirmed == true }.count
+        vm.gamePlayers
+            .filter { vm.activePlayerIds.contains($0.id) }
+            .filter { vm.currentRoundSelections[$0.id]?.isConfirmed == true }
+            .count
     }
 
     private var currentRoundPage: some View {
@@ -159,16 +164,36 @@ struct ScoreTab: View {
                             }
                             .padding(14)
                         }
+                    } else if vm.isSuddenDeath {
+                        GlassCard {
+                            HStack(spacing: 10) {
+                                Image(systemName: "bolt.fill")
+                                    .foregroundStyle(Color(hex: "FF4E50"))
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Sudden Death")
+                                        .font(.flipBody())
+                                        .foregroundStyle(.white)
+                                    Text("Tied at the top — only highlighted players play this round.")
+                                        .font(.flipCaption())
+                                        .foregroundStyle(.white.opacity(0.65))
+                                }
+                                Spacer()
+                            }
+                            .padding(14)
+                        }
                     }
 
                     ForEach(vm.sortedGamePlayers) { gp in
+                        let isParticipant = vm.activePlayerIds.contains(gp.id)
                         PlayerScoreCard(
                             gamePlayer: gp,
                             target: vm.target,
                             isScored: vm.currentRoundSelections[gp.id]?.isConfirmed == true
                         ) {
-                            scoringPlayer = gp
+                            if isParticipant { scoringPlayer = gp }
                         }
+                        .opacity(isParticipant ? 1.0 : 0.35)
+                        .disabled(!isParticipant)
                     }
                 }
                 .padding(.horizontal)
@@ -191,7 +216,7 @@ struct ScoreTab: View {
     // MARK: - Next Round button
 
     private var nextRoundButton: some View {
-        let unscoredCount = vm.gamePlayers.count - scoredCount
+        let unscoredCount = vm.activePlayerIds.count - scoredCount
         return Button {
             vm.bustUnscoredPlayers()
             completedRoundNum = vm.roundNum

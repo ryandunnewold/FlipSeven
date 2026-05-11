@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ScoringSheet: View {
     let gamePlayer: GamePlayer
+    let variantDefinition: VariantDefinition
+    let isSuddenDeath: Bool
     let onConfirm: (Int, Bool, Bool, RoundSelection) -> Void
     let onSaveDraft: (RoundSelection) -> Void
 
@@ -17,19 +19,25 @@ struct ScoringSheet: View {
 
     private let regularCols  = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
     private let modifierCols = Array(repeating: GridItem(.flexible(), spacing: 8), count: 5)
-    private let modifierValues = [2, 4, 6, 8, 10]
 
-    private let winnerBonus = 15
+    private var numberCardValues: [Int] { variantDefinition.numberCardValues }
+    private var modifierValues: [Int]   { variantDefinition.modifierAddValues }
+    private var winnerBonus: Int        { variantDefinition.roundWinnerBonus.points }
+    private var bonusThreshold: Int     { variantDefinition.roundWinnerBonus.requiredUniqueNumberCards }
 
     // MARK: - Init
 
     init(
         gamePlayer: GamePlayer,
+        variantDefinition: VariantDefinition,
+        isSuddenDeath: Bool = false,
         initialSelection: RoundSelection? = nil,
         onConfirm: @escaping (Int, Bool, Bool, RoundSelection) -> Void,
         onSaveDraft: @escaping (RoundSelection) -> Void
     ) {
         self.gamePlayer = gamePlayer
+        self.variantDefinition = variantDefinition
+        self.isSuddenDeath = isSuddenDeath
         self.onConfirm = onConfirm
         self.onSaveDraft = onSaveDraft
 
@@ -42,19 +50,19 @@ struct ScoringSheet: View {
         if sel.useManual {
             _manualInput = State(initialValue: sel.manualInput.isEmpty ? "0" : sel.manualInput)
         } else {
-            // Compute from existing card selections
-            let regular = sel.selectedRegular.reduce(0, +)
-            let mods    = sel.selectedModifiers.reduce(0, +)
-            let isWin   = sel.selectedRegular.count == 7
-            let pts     = (sel.hasDoubler ? regular * 2 : regular) + mods + (isWin ? 15 : 0)
-            _manualInput = State(initialValue: "\(pts)")
+            let regular   = sel.selectedRegular.reduce(0, +)
+            let mods      = sel.selectedModifiers.reduce(0, +)
+            let bonus     = variantDefinition.roundWinnerBonus
+            let isWin     = sel.selectedRegular.count == bonus.requiredUniqueNumberCards
+            let pts       = (sel.hasDoubler ? regular * 2 : regular) + mods + (isWin ? bonus.points : 0)
+            _manualInput  = State(initialValue: "\(pts)")
         }
     }
 
     // MARK: - Computed
 
     var regularCount: Int  { selectedRegular.count }
-    var isWinner: Bool     { regularCount == 7 }
+    var isWinner: Bool     { regularCount == bonusThreshold }
     var totalSelected: Int { selectedRegular.count + selectedModifiers.count }
 
     var regularPts:  Int { selectedRegular.reduce(0, +) }
@@ -122,6 +130,21 @@ struct ScoringSheet: View {
                 .padding(.horizontal)
                 .padding(.top, 20)
                 .padding(.bottom, 12)
+
+                // ── Sudden-death badge ───────────────────────────────────
+                if isSuddenDeath {
+                    HStack(spacing: 6) {
+                        Image(systemName: "bolt.fill")
+                        Text("Sudden Death")
+                    }
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(Color(hex: "FF4E50").opacity(0.85))
+                    .clipShape(Capsule())
+                    .padding(.bottom, 6)
+                }
 
                 // ── Winner badge ─────────────────────────────────────────
                 if isWinner {
@@ -218,7 +241,7 @@ struct ScoringSheet: View {
                         sectionLabel("NUMBER CARDS")
 
                         LazyVGrid(columns: regularCols, spacing: 8) {
-                            ForEach(0...12, id: \.self) { n in
+                            ForEach(numberCardValues, id: \.self) { n in
                                 cardChip(
                                     label: "\(n)",
                                     isSelected: selectedRegular.contains(n),
@@ -253,16 +276,18 @@ struct ScoringSheet: View {
                                     }
                                 }
                             }
-                            cardChip(
-                                label: "2×",
-                                isSelected: hasDoubler,
-                                selectedColor: Color(hex: "FF4E50"),
-                                idleColor: Color(hex: "FF4E50").opacity(0.10),
-                                idleBorder: Color(hex: "FF4E50").opacity(0.40)
-                            ) {
-                                Haptics.selection()
-                                withAnimation(.flipBounce) {
-                                    hasDoubler.toggle()
+                            if variantDefinition.includesDoubler {
+                                cardChip(
+                                    label: "2×",
+                                    isSelected: hasDoubler,
+                                    selectedColor: Color(hex: "FF4E50"),
+                                    idleColor: Color(hex: "FF4E50").opacity(0.10),
+                                    idleBorder: Color(hex: "FF4E50").opacity(0.40)
+                                ) {
+                                    Haptics.selection()
+                                    withAnimation(.flipBounce) {
+                                        hasDoubler.toggle()
+                                    }
                                 }
                             }
                         }
