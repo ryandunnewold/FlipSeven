@@ -122,11 +122,35 @@ struct RecordsSheet: View {
     private func historyCard(_ record: GameRecord) -> some View {
         GlassCard {
             VStack(spacing: 10) {
-                // Date + rounds
-                HStack {
+                // Date + variant badge + rounds
+                HStack(spacing: 8) {
                     Text(record.date, style: .date)
                         .font(.flipCaption())
                         .foregroundStyle(.white.opacity(0.5))
+                    if record.resolvedVariant != .standard {
+                        Text(record.resolvedVariant.shortName.uppercased())
+                            .font(.system(size: 9, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .tracking(1.0)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(record.resolvedVariant.accentColor.opacity(0.85))
+                            .clipShape(Capsule())
+                    }
+                    if record.hadSuddenDeath {
+                        HStack(spacing: 2) {
+                            Image(systemName: "bolt.fill")
+                                .font(.system(size: 8, weight: .bold))
+                            Text("SD")
+                                .font(.system(size: 9, weight: .bold, design: .rounded))
+                                .tracking(0.8)
+                        }
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color(hex: "FF4E50").opacity(0.85))
+                        .clipShape(Capsule())
+                    }
                     Spacer()
                     Text("\(record.roundsPlayed) rounds")
                         .font(.flipCaption())

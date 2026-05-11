@@ -37,6 +37,7 @@
 		BD9665F1B1E9739E23CE9FA4 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */; };
 		C1A84125995A07F07E84719A /* PastRoundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD2F7F9AE12BBCD263296F /* PastRoundView.swift */; };
 		C5A1F27AB9EE8EE56B641030 /* TabPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35990E576030A295B7EEFF8B /* TabPicker.swift */; };
+		CF12E2A24E772E813C3F344C /* GameVariant.swift in Sources */ = {isa = PBXBuildFile; fileRef = B616F5F3C32C5300FB780570 /* GameVariant.swift */; };
 		E6CC8C14D51C3771EC11B3ED /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326C064C48A65C9B54FC7D9C /* Haptics.swift */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		8DFA926E18D2229A599BC15F /* RulesTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulesTab.swift; sourceTree = "<group>"; };
 		B13487A4008EAFA9BBC6FF2E /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
 		B29B3E94674E86D12AA7162D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B616F5F3C32C5300FB780570 /* GameVariant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameVariant.swift; sourceTree = "<group>"; };
 		D411E164DEB651CC1C4479EF /* FlipSeven.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FlipSeven.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D580CD9AEF79A0BE63EB7A9B /* GameViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
 		D64C3B385AD6650B9BB2451B /* NewGameSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameSheet.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			children = (
 				1989F769326303F267E937EF /* GamePlayer.swift */,
 				791EBBED6C5630DAE3C3C027 /* GameRecord.swift */,
+				B616F5F3C32C5300FB780570 /* GameVariant.swift */,
 				FE270C832D94CDF6D625EB3B /* Player.swift */,
 				5A0A763E1D97F417269129E1 /* RoundSelection.swift */,
 				3059127F195C59A2AAA1BD80 /* ScoreEvent.swift */,
@@ -268,7 +271,6 @@
 				};
 			};
 			buildConfigurationList = BABD13A675533FAE93EB154D /* Build configuration list for PBXProject "FlipSeven" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -278,6 +280,7 @@
 			mainGroup = D89DF8974387F4B6CF32A4F6;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			productRefGroup = C64E5E261E1E7E6269E5B1FA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -313,6 +316,7 @@
 				0EB7CC67664DCCFB345E1410 /* FlipTypography.swift in Sources */,
 				3382C2CEA13C1A745228CA40 /* GamePlayer.swift in Sources */,
 				2A3ADD1B8286DF5CA7CE46CB /* GameRecord.swift in Sources */,
+				CF12E2A24E772E813C3F344C /* GameVariant.swift in Sources */,
 				1B49543A33F79872BB308666 /* GameViewModel.swift in Sources */,
 				1094F2680A28BDDD765C643C /* GlassCard.swift in Sources */,
 				E6CC8C14D51C3771EC11B3ED /* Haptics.swift in Sources */,

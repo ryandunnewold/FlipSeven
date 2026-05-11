@@ -9,6 +9,7 @@ struct NewGameSheet: View {
     @State private var newEmoji: String = "🦄"
     @State private var showEmojiForNew: Bool = false
     @State private var editingEmojiFor: UUID? = nil
+    @State private var selectedVariant: GameVariant = .standard
     @FocusState private var nameFocused: Bool
 
     var canStart: Bool { selectedIds.count >= 2 }
@@ -37,7 +38,11 @@ struct NewGameSheet: View {
                 Text("Select 2+ players")
                     .font(.flipCaption())
                     .foregroundStyle(.white.opacity(0.6))
-                    .padding(.bottom, 16)
+                    .padding(.bottom, 12)
+
+                variantPicker
+                    .padding(.horizontal)
+                    .padding(.bottom, 14)
 
                 ScrollView {
                     VStack(spacing: 10) {
@@ -55,7 +60,7 @@ struct NewGameSheet: View {
             VStack {
                 Spacer()
                 Button {
-                    vm.startGame(with: Array(selectedIds))
+                    vm.startGame(with: Array(selectedIds), variant: selectedVariant)
                     dismiss()
                 } label: {
                     Text(canStart
@@ -90,6 +95,53 @@ struct NewGameSheet: View {
                 }
             }
         }
+    }
+
+    private var variantPicker: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("EDITION")
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white.opacity(0.45))
+                .tracking(1.6)
+
+            HStack(spacing: 10) {
+                ForEach(GameVariant.allCases) { v in
+                    variantChip(v)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func variantChip(_ v: GameVariant) -> some View {
+        let isSelected = selectedVariant == v
+        Button {
+            withAnimation(.flipBounce) { selectedVariant = v }
+            Haptics.selection()
+        } label: {
+            VStack(spacing: 4) {
+                Text(v.shortName)
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(isSelected ? .black : .white)
+                Text(v.displayName)
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .foregroundStyle(isSelected ? .black.opacity(0.7) : .white.opacity(0.55))
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(isSelected ? v.accentColor : Color.white.opacity(0.08))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(isSelected ? v.accentColor : Color.white.opacity(0.18),
+                                          lineWidth: 1.5)
+                    }
+            }
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(v.displayName) edition")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     @ViewBuilder
